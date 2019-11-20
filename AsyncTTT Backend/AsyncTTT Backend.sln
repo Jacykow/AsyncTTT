@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29519.87
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AsyncTTT Backend", "AsyncTTT Backend.csproj", "{9E7A2E5A-34CF-430E-9919-CF9076905CDC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9E7A2E5A-34CF-430E-9919-CF9076905CDC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E7A2E5A-34CF-430E-9919-CF9076905CDC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E7A2E5A-34CF-430E-9919-CF9076905CDC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E7A2E5A-34CF-430E-9919-CF9076905CDC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9B796873-DC95-402A-A50C-45B996AE5B6E}
+	EndGlobalSection
+EndGlobal
