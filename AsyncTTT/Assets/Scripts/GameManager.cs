@@ -7,7 +7,7 @@ namespace AsyncTTT
     {
         private void Start()
         {
-            new GetUser().Execute().Subscribe(_ =>
+            new GetUser().Subscribe(_ =>
             {
                 Debug.Log("here");
             });

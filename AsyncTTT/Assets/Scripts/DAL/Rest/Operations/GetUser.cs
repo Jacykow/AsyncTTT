@@ -1,12 +1,18 @@
-﻿using Assets.Scripts.Utility;
+﻿using Assets.Scripts.DAL.Rest.Config;
+using Gulib.Networking;
+using Gulib.Abstraction;
 using System;
+using System.Net.Http;
 using UniRx;
-using UnityEngine.Networking;
 
-public class GetUser : IOperation<User>
+public class GetUser : ObservableOperation<User>
 {
-    public IObservable<User> Execute()
+    public override IObservable<User> ExecuteAsObservable()
     {
-        return new UnityWebRequest("https://asyncttt.azurewebsites.net/api/user", "GET").Execute().Select(_ => new User());
+        return new UnityWebRequestBuilder()
+        {
+            Url = ApiConfig.Endpoints.AzureUser,
+            HttpMethod = HttpMethod.Get
+        }.Select(_ => new User());
     }
 }

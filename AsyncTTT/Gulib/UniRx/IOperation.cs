@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Assets.Scripts.Utility
+namespace Gulib.UniRx
 {
     public interface IOperation<TResult>
     {
