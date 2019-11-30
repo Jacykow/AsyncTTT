@@ -13,6 +13,6 @@ public class GetUsers : ObservableOperation<List<User>>
         {
             Url = ApiConfig.Endpoints.AzureUser,
             HttpMethod = HttpMethod.Get
-        }.ExecuteAsModelObservable<List<User>>();
+        }.SelectModel<List<User>>();
     }
 }

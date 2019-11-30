@@ -7,7 +7,7 @@ namespace Gulib.Networking
 {
     public static class UnityWebRequestExtensions
     {
-        public static IObservable<TModel> ExecuteAsModelObservable<TModel>(this IObservable<UnityWebRequest> observableRequest, JsonSerializerSettings jsonSettings = null)
+        public static IObservable<TModel> SelectModel<TModel>(this IObservable<UnityWebRequest> observableRequest, JsonSerializerSettings jsonSettings = null)
         {
             jsonSettings = jsonSettings ?? new JsonSerializerSettings();
             return observableRequest.Select(request =>
