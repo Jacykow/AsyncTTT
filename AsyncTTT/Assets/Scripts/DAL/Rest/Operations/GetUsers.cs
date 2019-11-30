@@ -1,18 +1,18 @@
 ﻿using Assets.Scripts.DAL.Rest.Config;
-using Gulib.Networking;
 using Gulib.Abstraction;
+using Gulib.Networking;
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
-using UniRx;
 
-public class GetUser : ObservableOperation<User>
+public class GetUsers : ObservableOperation<List<User>>
 {
-    public override IObservable<User> ExecuteAsObservable()
+    public override IObservable<List<User>> ExecuteAsObservable()
     {
         return new UnityWebRequestBuilder()
         {
             Url = ApiConfig.Endpoints.AzureUser,
             HttpMethod = HttpMethod.Get
-        }.Select(_ => new User());
+        }.ExecuteAsModelObservable<List<User>>();
     }
 }

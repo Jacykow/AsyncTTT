@@ -10,9 +10,18 @@ namespace AsyncTTT_Backend.Controllers
     {
         // GET: api/User
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IEnumerable<User> Get()
         {
-            return new string[] { "value1", "value2" };
+            return new User[] {
+                new User(){
+                    Id = 0,
+                    Name = "Jacek"
+                },
+                new User(){
+                    Id = 1,
+                    Name = "Maciej"
+                }
+            };
         }
 
         // GET: api/User/5
