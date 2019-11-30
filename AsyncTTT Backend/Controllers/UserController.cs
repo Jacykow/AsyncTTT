@@ -1,6 +1,9 @@
 ﻿using AsyncTTT_Backend.Models;
+using AsyncTTT_Backend.SQL;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using System.Collections.Generic;
+using System.Data;
 
 namespace AsyncTTT_Backend.Controllers
 {
@@ -12,16 +15,24 @@ namespace AsyncTTT_Backend.Controllers
         [HttpGet]
         public IEnumerable<User> Get()
         {
-            return new User[] {
-                new User(){
-                    Id = 0,
-                    Name = "Jacek"
+            var sqlCommand = new SimpleSqlCommand<User>()
+            {
+                SqlCommand = "SELECT * FROM Persons WHERE id > @id",
+                Parameters = new SqlParameter[]
+                {
+                    new SqlParameter("@id", SqlDbType.Int)
+                    {
+                        Value = 1
+                    }
                 },
-                new User(){
-                    Id = 1,
-                    Name = "Maciej"
+                ModelExtractor = reader => new User
+                {
+                    Id = (int)reader[0],
+                    Name = (string)reader[1]
                 }
             };
+
+            return sqlCommand.Execute();
         }
 
         // GET: api/User/5
