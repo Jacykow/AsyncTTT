@@ -17,7 +17,7 @@ namespace AsyncTTT_Backend.Controllers
         {
             var sqlCommand = new SimpleSqlCommand<User>()
             {
-                SqlCommand = "SELECT * FROM Persons WHERE id > @id",
+                SqlCommand = "SELECT * FROM Users WHERE id > @id",
                 Parameters = new SqlParameter[]
                 {
                     new SqlParameter("@id", SqlDbType.Int)
