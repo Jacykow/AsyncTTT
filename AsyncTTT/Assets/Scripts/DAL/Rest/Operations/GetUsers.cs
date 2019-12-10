@@ -7,12 +7,12 @@ using System.Net.Http;
 
 public class GetUsers : ObservableOperation<List<User>>
 {
-    public override IObservable<List<User>> ExecuteAsObservable()
+    protected override IObservable<List<User>> ExecuteOnce()
     {
         return new UnityWebRequestBuilder()
         {
             Url = ApiConfig.Endpoints.AzureUser,
             HttpMethod = HttpMethod.Get
-        }.SelectModel<List<User>>();
+        }.Execute().SelectModel<List<User>>();
     }
 }

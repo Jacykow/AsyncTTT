@@ -7,16 +7,23 @@ namespace AsyncTTT
     {
         private void Start()
         {
-            new GetUsers().Subscribe(users =>
+            var u = new GetUsers();
+
+            u.Observe().Subscribe(users =>
             {
                 foreach (var user in users)
                 {
                     Debug.Log(user.Name);
                 }
-            }, () =>
-            {
-                Debug.Log("oncomplete");
             });
+            u.Observe().Subscribe(users =>
+            {
+                foreach (var user in users)
+                {
+                    Debug.Log(user.Name + "2");
+                }
+            });
+            u.Execute();
         }
     }
 }

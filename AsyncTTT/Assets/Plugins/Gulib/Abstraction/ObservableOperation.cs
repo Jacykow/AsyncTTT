@@ -1,14 +1,32 @@
 ﻿using System;
+using UniRx;
 
 namespace Gulib.Abstraction
 {
-    public abstract class ObservableOperation<TResult> : IObservableOperation<TResult>
+    public abstract class ObservableOperation<TResult>
     {
-        public abstract IObservable<TResult> ExecuteAsObservable();
+        private bool _executed = false;
 
-        public IDisposable Subscribe(IObserver<TResult> observer)
+        private readonly Subject<TResult> _subject = new Subject<TResult>();
+
+        protected abstract IObservable<TResult> ExecuteOnce();
+
+        public IObservable<TResult> Execute()
         {
-            return ExecuteAsObservable().Subscribe(observer);
+            if (_executed == false)
+            {
+                ExecuteOnce().Subscribe(
+                   result => _subject.OnNext(result),
+                   error => _subject.OnError(error),
+                   () => _subject.OnCompleted());
+                _executed = true;
+            }
+            return _subject;
+        }
+
+        public IObservable<TResult> Observe()
+        {
+            return _subject;
         }
     }
 }

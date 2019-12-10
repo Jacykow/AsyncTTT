@@ -3,19 +3,14 @@ using UniRx;
 
 namespace Gulib.Abstraction
 {
-    public abstract class VoidOperation : IObservableOperation<Unit>
+    public abstract class VoidOperation : ObservableOperation<Unit>
     {
-        public abstract void Execute();
-
-        public IObservable<Unit> ExecuteAsObservable()
+        protected sealed override IObservable<Unit> ExecuteOnce()
         {
-            Execute();
+            ExecuteImmediate();
             return Observable.ReturnUnit();
         }
 
-        public IDisposable Subscribe(IObserver<Unit> observer)
-        {
-            return ExecuteAsObservable().Subscribe(observer);
-        }
+        protected abstract void ExecuteImmediate();
     }
 }

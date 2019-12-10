@@ -3,18 +3,13 @@ using UniRx;
 
 namespace Gulib.Abstraction
 {
-    public abstract class Operation<TResult> : IObservableOperation<TResult>
+    public abstract class Operation<TResult> : ObservableOperation<TResult>
     {
-        public abstract TResult Execute();
-
-        public IObservable<TResult> ExecuteAsObservable()
+        protected sealed override IObservable<TResult> ExecuteOnce()
         {
-            return Observable.Return(Execute());
+            return Observable.Return(ExecuteImmediate());
         }
 
-        public IDisposable Subscribe(IObserver<TResult> observer)
-        {
-            return ExecuteAsObservable().Subscribe(observer);
-        }
+        protected abstract TResult ExecuteImmediate();
     }
 }
