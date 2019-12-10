@@ -1,4 +1,5 @@
-﻿using UniRx;
+﻿using Assets.Scripts.DAL.Rest.Operations;
+using UniRx;
 using UnityEngine;
 
 namespace AsyncTTT
@@ -7,23 +8,7 @@ namespace AsyncTTT
     {
         private void Start()
         {
-            var u = new GetUsers();
-
-            u.Observe().Subscribe(users =>
-            {
-                foreach (var user in users)
-                {
-                    Debug.Log(user.Name);
-                }
-            });
-            u.Observe().Subscribe(users =>
-            {
-                foreach (var user in users)
-                {
-                    Debug.Log(user.Name + "2");
-                }
-            });
-            u.Execute();
+            new CheckCredentials("jacyk", "guczi").Execute().Subscribe(response => Debug.Log("Success: " + response.Success));
         }
     }
 }

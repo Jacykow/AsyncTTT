@@ -6,6 +6,7 @@
         {
             public static string AZURE = "https://asyncttt.azurewebsites.net/api";
             public static string AzureUser => AZURE + "/user";
+            public static string AzureLogin => AZURE + "/login";
         }
     }
 }

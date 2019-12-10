@@ -1,5 +1,8 @@
-﻿public class User
+﻿namespace Assets.Scripts.DAL.Rest.Models
 {
-    public int Id { get; set; }
-    public string Name { get; set; }
+    public class User
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+    }
 }

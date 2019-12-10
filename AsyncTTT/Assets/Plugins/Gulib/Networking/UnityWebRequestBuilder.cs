@@ -27,5 +27,10 @@ namespace Gulib.Networking
                 .CatchIgnore((Exception e) => Debug.LogException(e))
                 .Select(_ => Request);
         }
+
+        public void AddHeader(string key, string value)
+        {
+            Request.SetRequestHeader(key, value);
+        }
     }
 }
