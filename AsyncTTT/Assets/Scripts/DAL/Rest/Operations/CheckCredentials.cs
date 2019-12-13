@@ -1,12 +1,12 @@
 ﻿using Assets.Scripts.DAL.Rest.Config;
 using Assets.Scripts.DAL.Rest.Models;
-using Gulib.Abstraction;
 using Gulib.Networking;
+using Gulib.UniRx;
 using System;
 
 namespace Assets.Scripts.DAL.Rest.Operations
 {
-    public class CheckCredentials : ObservableOperation<LoginResponse>
+    public class CheckCredentials : IOperation<LoginResponse>
     {
         private readonly string _login;
         private readonly string _password;
@@ -17,7 +17,7 @@ namespace Assets.Scripts.DAL.Rest.Operations
             _password = password;
         }
 
-        protected override IObservable<LoginResponse> ExecuteOnce()
+        public IObservable<LoginResponse> Execute()
         {
             return new UnityWebRequestBuilder()
             {

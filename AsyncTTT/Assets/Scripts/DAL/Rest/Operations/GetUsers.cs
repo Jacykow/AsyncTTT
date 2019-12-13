@@ -1,16 +1,16 @@
 ﻿using Assets.Scripts.DAL.Rest.Config;
 using Assets.Scripts.DAL.Rest.Models;
-using Gulib.Abstraction;
 using Gulib.Networking;
+using Gulib.UniRx;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
 
 namespace Assets.Scripts.DAL.Rest.Operations
 {
-    public class GetUsers : ObservableOperation<List<User>>
+    public class GetUsers : IOperation<List<User>>
     {
-        protected override IObservable<List<User>> ExecuteOnce()
+        public IObservable<List<User>> Execute()
         {
             return new UnityWebRequestBuilder()
             {

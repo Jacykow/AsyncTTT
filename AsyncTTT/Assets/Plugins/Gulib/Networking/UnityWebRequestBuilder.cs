@@ -1,4 +1,4 @@
-﻿using Gulib.Abstraction;
+﻿using Gulib.UniRx;
 using System;
 using System.Net.Http;
 using UniRx;
@@ -7,7 +7,7 @@ using UnityEngine.Networking;
 
 namespace Gulib.Networking
 {
-    public class UnityWebRequestBuilder : ObservableOperation<UnityWebRequest>
+    public class UnityWebRequestBuilder : IOperation<UnityWebRequest>
     {
         public UnityWebRequest Request { get; }
         public string Url { get => Request.url; set => Request.url = value; }
@@ -19,7 +19,7 @@ namespace Gulib.Networking
             Request = unityWebRequest ?? new UnityWebRequest();
         }
 
-        protected override IObservable<UnityWebRequest> ExecuteOnce()
+        public IObservable<UnityWebRequest> Execute()
         {
             DownloadHandler = DownloadHandler ?? new DownloadHandlerBuffer();
             return Request.SendWebRequest()

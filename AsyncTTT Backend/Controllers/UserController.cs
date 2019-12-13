@@ -11,7 +11,6 @@ namespace AsyncTTT_Backend.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        // GET: api/User
         [HttpGet]
         public IEnumerable<User> Get()
         {
@@ -35,28 +34,20 @@ namespace AsyncTTT_Backend.Controllers
             return sqlCommand.Execute();
         }
 
-        // GET: api/User/5
         [HttpGet("{id}", Name = "Get")]
         public string Get(int id)
         {
             return "value";
         }
 
-        // POST: api/User
+        [HttpGet("credentials", Name = "Get")]
+        public string CheckCredentials()
+        {
+            return "value";
+        }
+
         [HttpPost]
         public void Post([FromBody] User value)
-        {
-        }
-
-        // PUT: api/User/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
         {
         }
     }
