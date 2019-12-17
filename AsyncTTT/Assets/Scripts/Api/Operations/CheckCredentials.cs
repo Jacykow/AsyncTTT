@@ -1,11 +1,11 @@
-﻿using Assets.Scripts.Operations.Rest.Config;
-using Assets.Scripts.Operations.Rest.Models;
+﻿using Assets.Scripts.Api.Config;
+using Assets.Scripts.Api.Models;
 using Gulib.Networking;
 using Gulib.UniRx;
 using System;
 using UniRx;
 
-namespace Assets.Scripts.Operations.Rest.Operations
+namespace Assets.Scripts.Api.Operations
 {
     public class CheckCredentials : IOperation<DefaultResponse>
     {

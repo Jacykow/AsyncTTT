@@ -1,4 +1,4 @@
-﻿namespace Assets.Scripts.Operations.Rest.Config
+﻿namespace Assets.Scripts.Api.Config
 {
     public static class ApiConfig
     {

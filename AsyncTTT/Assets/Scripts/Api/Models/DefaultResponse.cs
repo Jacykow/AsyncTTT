@@ -1,4 +1,4 @@
-﻿namespace Assets.Scripts.Operations.Rest.Models
+﻿namespace Assets.Scripts.Api.Models
 {
     public class DefaultResponse
     {

@@ -1,8 +1,8 @@
-﻿using Assets.Scripts.Operations.Rest.Operations;
+﻿using Assets.Scripts.Api.Operations;
 using UniRx;
 using UnityEngine;
 
-namespace AsyncTTT.Managers
+namespace Assets.Scripts.Managers
 {
     public class GameManager : MonoBehaviour
     {
