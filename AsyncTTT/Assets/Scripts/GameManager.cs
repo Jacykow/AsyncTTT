@@ -8,7 +8,9 @@ namespace AsyncTTT
     {
         private void Start()
         {
-            new CheckCredentials("jacyk", "guczi").Execute().Subscribe(response => Debug.Log("Success: " + response.Success));
+            new CheckCredentials("testuser", "testp4$$W0rD").Execute()
+                .Subscribe(response => Debug.Log("Success: " + response.Success + " Creds: " + response.Message))
+                .AddTo(this);
         }
     }
 }

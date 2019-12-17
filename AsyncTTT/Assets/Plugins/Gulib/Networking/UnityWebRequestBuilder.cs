@@ -28,9 +28,10 @@ namespace Gulib.Networking
                 .Select(_ => Request);
         }
 
-        public void AddHeader(string key, string value)
+        public UnityWebRequestBuilder AddHeader(string key, string value)
         {
             Request.SetRequestHeader(key, value);
+            return this;
         }
     }
 }

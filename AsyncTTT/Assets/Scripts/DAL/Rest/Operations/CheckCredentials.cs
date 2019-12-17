@@ -3,10 +3,12 @@ using Assets.Scripts.DAL.Rest.Models;
 using Gulib.Networking;
 using Gulib.UniRx;
 using System;
+using UniRx;
+using UnityEngine;
 
 namespace Assets.Scripts.DAL.Rest.Operations
 {
-    public class CheckCredentials : IOperation<LoginResponse>
+    public class CheckCredentials : IOperation<DefaultResponse>
     {
         private readonly string _login;
         private readonly string _password;
@@ -17,12 +19,20 @@ namespace Assets.Scripts.DAL.Rest.Operations
             _password = password;
         }
 
-        public IObservable<LoginResponse> Execute()
+        public IObservable<DefaultResponse> Execute()
         {
             return new UnityWebRequestBuilder()
             {
-                Url = ApiConfig.Endpoints.AzureLogin
-            }.Execute().SelectModel<LoginResponse>();
+                Url = ApiConfig.Endpoints.AzureUser
+            }
+            .AddBasicAuthHeader(_login, _password)
+            .Execute()
+            .CatchIgnore((Exception e) => Debug.LogException(e))
+            .Select(response =>
+            {
+                return response;
+            })
+            .SelectModel<DefaultResponse>();
         }
     }
 }

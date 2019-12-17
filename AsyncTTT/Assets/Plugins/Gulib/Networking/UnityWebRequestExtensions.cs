@@ -17,10 +17,10 @@ namespace Gulib.Networking
             });
         }
 
-        public static void AddBasicAuthHeader(this UnityWebRequestBuilder requestBuilder, string login, string password)
+        public static UnityWebRequestBuilder AddBasicAuthHeader(this UnityWebRequestBuilder requestBuilder, string login, string password)
         {
             string encodedCredentials = Convert.ToBase64String(Encoding.ASCII.GetBytes(login + ":" + password));
-            requestBuilder.AddHeader("Authorization", "Basic " + encodedCredentials);
+            return requestBuilder.AddHeader("Authorization", "Basic " + encodedCredentials);
         }
     }
 }
