@@ -1,12 +1,13 @@
-﻿using Gulib.Abstraction;
+﻿using Gulib.UniRx;
 using System;
 using System.Net.Http;
 using UniRx;
+using UnityEngine;
 using UnityEngine.Networking;
 
 namespace Gulib.Networking
 {
-    public class UnityWebRequestBuilder : ObservableOperation<UnityWebRequest>
+    public class UnityWebRequestBuilder : IOperation<UnityWebRequest>
     {
         public UnityWebRequest Request { get; }
         public string Url { get => Request.url; set => Request.url = value; }
@@ -18,10 +19,19 @@ namespace Gulib.Networking
             Request = unityWebRequest ?? new UnityWebRequest();
         }
 
-        public override IObservable<UnityWebRequest> ExecuteAsObservable()
+        public IObservable<UnityWebRequest> Execute()
         {
             DownloadHandler = DownloadHandler ?? new DownloadHandlerBuffer();
-            return Request.SendWebRequest().AsObservable().Select(_ => Request);
+            return Request.SendWebRequest()
+                .AsObservable()
+                .CatchIgnore((Exception e) => Debug.LogException(e))
+                .Select(_ => Request);
+        }
+
+        public UnityWebRequestBuilder AddHeader(string key, string value)
+        {
+            Request.SetRequestHeader(key, value);
+            return this;
         }
     }
 }
