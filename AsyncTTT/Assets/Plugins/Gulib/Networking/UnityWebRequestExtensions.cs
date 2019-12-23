@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Text;
 using UniRx;
 using UnityEngine.Networking;
 
@@ -14,6 +15,12 @@ namespace Gulib.Networking
             {
                 return JsonConvert.DeserializeObject<TModel>(request.downloadHandler.text, jsonSettings);
             });
+        }
+
+        public static UnityWebRequestBuilder AddBasicAuthHeader(this UnityWebRequestBuilder requestBuilder, string login, string password)
+        {
+            string encodedCredentials = Convert.ToBase64String(Encoding.ASCII.GetBytes(login + ":" + password));
+            return requestBuilder.AddHeader("Authorization", "Basic " + encodedCredentials);
         }
     }
 }

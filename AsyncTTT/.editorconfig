@@ -1,0 +1,4 @@
+﻿[*.cs]
+
+# IDE0054: Użyj przypisania złożonego
+dotnet_style_prefer_compound_assignment = false:suggestion

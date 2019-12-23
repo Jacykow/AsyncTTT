@@ -1,5 +1,6 @@
 ﻿using AsyncTTT_Backend.Models;
 using AsyncTTT_Backend.SQL;
+using AsyncTTT_Backend.Utility;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using System.Collections.Generic;
@@ -11,9 +12,20 @@ namespace AsyncTTT_Backend.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        // GET: api/User
         [HttpGet]
-        public IEnumerable<User> Get()
+        public DefaultResponse Get()
+        {
+            var credentials = ControllerUtility.GetCredentials(Request.Headers);
+            return new DefaultResponse
+            {
+                Success = true,
+                Message = $"<{credentials.Login}> <{credentials.Password}>"
+            };
+        }
+
+        // To jest testowe i do wywalenia
+        [HttpGet("{id}", Name = "Get")]
+        public IEnumerable<User> Get(int id)
         {
             var sqlCommand = new SimpleSqlCommand<User>()
             {
@@ -22,7 +34,7 @@ namespace AsyncTTT_Backend.Controllers
                 {
                     new SqlParameter("@id", SqlDbType.Int)
                     {
-                        Value = 1
+                        Value = id
                     }
                 },
                 ModelExtractor = reader => new User
@@ -35,28 +47,8 @@ namespace AsyncTTT_Backend.Controllers
             return sqlCommand.Execute();
         }
 
-        // GET: api/User/5
-        [HttpGet("{id}", Name = "Get")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
-        // POST: api/User
         [HttpPost]
         public void Post([FromBody] User value)
-        {
-        }
-
-        // PUT: api/User/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
         {
         }
     }
