@@ -29,7 +29,7 @@ namespace AsyncTTT_Backend.Controllers
         {
             var sqlCommand = new SimpleSqlCommand<User>()
             {
-                SqlCommand = "SELECT * FROM Users WHERE id > @id",
+                SqlCommand = "SELECT * FROM Players WHERE id_player > @id",
                 Parameters = new SqlParameter[]
                 {
                     new SqlParameter("@id", SqlDbType.Int)
@@ -40,7 +40,7 @@ namespace AsyncTTT_Backend.Controllers
                 ModelExtractor = reader => new User
                 {
                     Id = (int)reader[0],
-                    Name = (string)reader[1]
+                    Name = ((int)reader[1]).ToString()
                 }
             };
 

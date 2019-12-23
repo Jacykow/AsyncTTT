@@ -6,7 +6,7 @@ namespace AsyncTTT_Backend.SQL
 {
     public static partial class AsyncTTTSqlConnection
     {
-        public static string ConnectionString => "Server=tcp:attt-server.database.windows.net,1433;Initial Catalog=attt-db;Persist Security Info=False;User ID=atttadmin;Password={password};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;".Replace("{password}", DB_PASSWORD);
+        public static string ConnectionString => "Server=tcp:atttserver.database.windows.net,1433;Initial Catalog=atttdb;Persist Security Info=False;User ID=atttadmin;Password={password};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;".Replace("{password}", DB_PASSWORD);
 
         public static List<TModel> ExecuteSql<TModel>(SimpleSqlCommand<TModel> simpleSqlCommand)
         {
