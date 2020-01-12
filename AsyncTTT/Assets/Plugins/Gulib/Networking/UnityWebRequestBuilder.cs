@@ -2,7 +2,6 @@
 using System;
 using System.Net.Http;
 using UniRx;
-using UnityEngine;
 using UnityEngine.Networking;
 
 namespace Gulib.Networking
@@ -24,8 +23,14 @@ namespace Gulib.Networking
             DownloadHandler = DownloadHandler ?? new DownloadHandlerBuffer();
             return Request.SendWebRequest()
                 .AsObservable()
-                .CatchIgnore((Exception e) => Debug.LogException(e))
-                .Select(_ => Request);
+                .Select(_ =>
+                {
+                    if (Request.responseCode < 200 || Request.responseCode >= 300)
+                    {
+                        throw new WebRequestException(Request);
+                    }
+                    return Request;
+                });
         }
 
         public UnityWebRequestBuilder AddHeader(string key, string value)

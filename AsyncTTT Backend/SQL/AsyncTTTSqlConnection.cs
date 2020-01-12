@@ -25,10 +25,17 @@ namespace AsyncTTT_Backend.SQL
                 }
                 sqlConnection.Open();
 
-                using var reader = cmd.ExecuteReader();
-                while (reader.Read())
+                if (simpleSqlCommand.ModelExtractor != null)
                 {
-                    modelList.Add(simpleSqlCommand.ModelExtractor(reader));
+                    using var reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        modelList.Add(simpleSqlCommand.ModelExtractor(reader));
+                    }
+                }
+                else
+                {
+                    modelList = null;
                 }
             }
             return modelList;
