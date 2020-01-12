@@ -1,4 +1,5 @@
 ﻿using AsyncTTT_Backend.Models;
+using AsyncTTT_Backend.Models.Internal;
 using AsyncTTT_Backend.SQL;
 using AsyncTTT_Backend.Utility;
 using Microsoft.AspNetCore.Mvc;
@@ -10,31 +11,22 @@ namespace AsyncTTT_Backend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class FriendsController : ControllerBase
     {
-        [HttpGet]
-        public DefaultResponse Get()
+
+        [HttpGet(Name = "GetFriends")]
+        public IEnumerable<User> GetFirends(int id)
         {
             var credentials = ControllerUtility.GetCredentials(Request.Headers);
-            return new DefaultResponse
-            {
-                Success = true,
-                Message = $"<{credentials.login}> <{credentials.password}>"
-            };
-        }
 
-        // To jest testowe i do wywalenia
-        [HttpGet("{id}", Name = "Get")]
-        public IEnumerable<User> Get(int id)
-        {
             var sqlCommand = new SimpleSqlCommand<User>()
             {
-                SqlCommand = "SELECT * FROM Players WHERE id_player > @id",
+                SqlCommand = "SELECT id_cred, id_player FROM friendships JOIN players on(player2 = id_player) WHERE player1 = ((SELECT id_player FROM credentials c join players p on(c.id_cred =  p.id_cred) WHERE nickname = @nick))",
                 Parameters = new SqlParameter[]
                 {
-                    new SqlParameter("@id", SqlDbType.Int)
+                    new SqlParameter("@nick", SqlDbType.VarChar)
                     {
-                        Value = id
+                        Value = credentials.login
                     }
                 },
                 ModelExtractor = reader => new User
@@ -49,7 +41,7 @@ namespace AsyncTTT_Backend.Controllers
 
 
         [HttpPost]
-        public void Post([FromBody] User value)
+        public void Post([FromBody] Invitation value)
         {
 
         }
