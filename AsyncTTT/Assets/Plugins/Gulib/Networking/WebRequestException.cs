@@ -6,6 +6,7 @@ namespace Gulib.Networking
     public class WebRequestException : Exception
     {
         public UnityWebRequest Request { get; }
+        public override string Message => Request.error + "\n" + base.Message;
 
         public WebRequestException(UnityWebRequest request = null) : base()
         {
