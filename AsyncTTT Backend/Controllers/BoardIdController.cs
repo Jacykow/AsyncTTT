@@ -10,7 +10,7 @@ namespace AsyncTTT_Backend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class BoardIdController: ControllerBase
     {
         [HttpGet]
         public DefaultResponse Get()
@@ -24,7 +24,7 @@ namespace AsyncTTT_Backend.Controllers
         }
 
         // To jest testowe i do wywalenia
-        [HttpGet("{id}", Name = "Get")]
+        [HttpGet("{id}", Name = "GetBoardId")]
         public IEnumerable<User> Get(int id)
         {
             var sqlCommand = new SimpleSqlCommand<User>()
@@ -49,9 +49,35 @@ namespace AsyncTTT_Backend.Controllers
 
 
         [HttpPost]
-        public void Post([FromBody] User value)
+        public void Post([FromBody] Move value)
         {
+            var credentials = ControllerUtility.GetCredentials(Request.Headers);
 
+            var sqlCommand = new SimpleSqlCommand<User>()
+            {
+                SqlCommand = "EXECUTE addMove @mNick = @nick, @mX_coord = @xcoord, @mY_coord = @ycoord, @mId_game = @idgame",
+                Parameters = new SqlParameter[]
+                {
+                    new SqlParameter("@idgame", SqlDbType.Int)
+                    {
+                        Value = value.IdGame
+                    },
+                    new SqlParameter("@xcoord", SqlDbType.Int)
+                    {
+                        Value = value.XCoord
+                    },
+                    new SqlParameter("@ycoord", SqlDbType.Int)
+                    {
+                        Value = value.YCoord
+                    },
+                    new SqlParameter("@nick", SqlDbType.VarChar)
+                    {
+                        Value = credentials.login
+                    }
+                }
+            };
+
+            sqlCommand.Execute();
         }
     }
 }
