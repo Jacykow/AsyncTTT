@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace Assets.Scripts.Managers
@@ -27,7 +28,22 @@ namespace Assets.Scripts.Managers
             {
                 SceneManager.UnloadSceneAsync(_viewSceneNames[_viewSceneNames.Count - 1]);
             }
+            _viewSceneNames.Add(viewSceneName);
             SceneManager.LoadScene(viewSceneName, LoadSceneMode.Additive);
+        }
+
+        public void Back()
+        {
+            if (_viewSceneNames.Count >= 2)
+            {
+                string lastSceneName = _viewSceneNames[_viewSceneNames.Count - 2];
+                _viewSceneNames.RemoveRange(_viewSceneNames.Count - 2, 2);
+                ChangeView(lastSceneName);
+            }
+            else
+            {
+                Application.Quit();
+            }
         }
     }
 }
