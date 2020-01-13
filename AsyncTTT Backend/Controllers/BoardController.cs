@@ -1,4 +1,5 @@
 ﻿using AsyncTTT_Backend.Models;
+using AsyncTTT_Backend.Models.Internal;
 using AsyncTTT_Backend.SQL;
 using AsyncTTT_Backend.Utility;
 using Microsoft.AspNetCore.Mvc;
@@ -10,7 +11,7 @@ namespace AsyncTTT_Backend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class BoardController : ControllerBase
     {
         [HttpGet]
         public DefaultResponse Get()
@@ -23,35 +24,30 @@ namespace AsyncTTT_Backend.Controllers
             };
         }
 
-        // To jest testowe i do wywalenia
-        [HttpGet("{id}", Name = "Get")]
-        public IEnumerable<User> Get(int id)
-        {
-            var sqlCommand = new SimpleSqlCommand<User>()
-            {
-                SqlCommand = "SELECT * FROM Players WHERE id_player > @id",
-                Parameters = new SqlParameter[]
-                {
-                    new SqlParameter("@id", SqlDbType.Int)
-                    {
-                        Value = id
-                    }
-                },
-                ModelExtractor = reader => new User
-                {
-                    Id = (int)reader[0],
-                    Id_cred = (int)reader[1]
-                }
-            };
-
-            return sqlCommand.Execute();
-        }
 
 
         [HttpPost]
-        public void Post([FromBody] User value)
+        public void Post([FromBody] Invitation value)
         {
+            var credentials = ControllerUtility.GetCredentials(Request.Headers);
 
+            var sqlCommand = new SimpleSqlCommand<Credentials>()
+            {
+                SqlCommand = "INSERT INTO games_invitations(sender, reciever) values((SELECT id_player FROM credentials c join players p on(c.id_cred =  p.id_cred) WHERE nickname = @nick),@rec)",
+                Parameters = new SqlParameter[]
+                {
+                    new SqlParameter("@nick", SqlDbType.VarChar)
+                    {
+                        Value = credentials.login
+                    },
+                    new SqlParameter("@rec", SqlDbType.Int)
+                    {
+                        Value = value.Reciever
+                    }
+                }
+            };
+
+            sqlCommand.Execute();
         }
     }
 }

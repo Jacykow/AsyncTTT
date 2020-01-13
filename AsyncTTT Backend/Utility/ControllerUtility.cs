@@ -14,15 +14,15 @@ namespace AsyncTTT_Backend.Utility
             {
                 return new Credentials
                 {
-                    Login = "No Authorization Header",
-                    Password = null
+                    login = "No Authorization Header",
+                    password = null
                 };
             }
             string[] credentialValues = Encoding.ASCII.GetString(Convert.FromBase64String(authorization.Substring(6))).Split(':');
             return new Credentials
             {
-                Login = credentialValues[0],
-                Password = credentialValues[1]
+                login = credentialValues[0],
+                password = credentialValues[1]
             };
         }
     }
