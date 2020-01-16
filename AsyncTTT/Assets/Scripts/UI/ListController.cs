@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Assets.Scripts.Abstraction;
+using Assets.Scripts.Utility;
+using System;
 using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,13 +12,11 @@ namespace Assets.Scripts.UI
         [SerializeField]
         private GameObject _listItemPrefab;
 
-        public IObservable<Unit> AddItem(string title, string subtitle, Color subtitleColor)
+        public IObservable<Unit> AddItem(ConfigurationDictionary configuration)
         {
-            var itemController = Instantiate(_listItemPrefab, transform).GetComponent<ListItemController>();
-            itemController.TitleText = title;
-            itemController.SubtitleText = subtitle;
-            itemController.SubtitleColor = subtitleColor;
-            return itemController.GetComponent<Button>().OnClickAsObservable();
+            var item = Instantiate(_listItemPrefab, transform);
+            item.GetComponent<IConfigurable>().Configure(configuration);
+            return item.GetComponent<Button>().OnClickAsObservable();
         }
     }
 }
