@@ -76,5 +76,11 @@ namespace AsyncTTT_Backend.Controllers
 
             sqlCommand.Execute();
         }
+
+        [HttpPut]
+        public void Put()
+        {
+            
+        }
     }
 }
