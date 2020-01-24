@@ -35,7 +35,13 @@ namespace Assets.Scripts.BLL.Operations
                 {
                     Id = 3,
                     Name = "A vs E",
-                    State = GameState.Ongoing
+                    State = GameState.YourTurn
+                },
+                new Game
+                {
+                    Id = 4,
+                    Name = "A vs F",
+                    State = GameState.TheirTurn
                 }
             });
         }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Assets.Scripts.Utility;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -21,6 +22,8 @@ namespace Assets.Scripts.Managers
         }
 
         private readonly List<string> _viewSceneNames = new List<string>();
+
+        public ConfigurationDictionary ViewParameters { get; } = new ConfigurationDictionary();
 
         public void ChangeView(string viewSceneName)
         {

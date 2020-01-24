@@ -15,6 +15,7 @@ namespace Assets.Scripts.UI
         public IObservable<Unit> AddItem(ConfigurationDictionary configuration)
         {
             var item = Instantiate(_listItemPrefab, transform);
+            item.SetActive(true);
             item.GetComponent<IConfigurable>().Configure(configuration);
             return item.GetComponent<Button>().OnClickAsObservable();
         }
