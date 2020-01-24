@@ -13,21 +13,13 @@ namespace AsyncTTT_Backend.Controllers
     [ApiController]
     public class CredentialsController : ControllerBase
     {
-        [HttpGet]
-        public DefaultResponse Get()
-        {
-            var credentials = ControllerUtility.GetCredentials(Request.Headers);
-            return new DefaultResponse
-            {
-                Success = true,
-                Message = $"<{credentials.login}> <{credentials.password}>"
-            };
-        }
+     
 
         // To jest testowe i do wywalenia
-        [HttpGet("{nick}/{pass}", Name = "GetCred")]
-        public bool GetCred(string nick, string pass)
+        [HttpGet(Name = "GetCred")]
+        public bool GetCred()
         {
+            var credentials = ControllerUtility.GetCredentials(Request.Headers);
 
             var sqlCommand = new SimpleSqlCommand<DefaultResponse>()
             {
@@ -37,11 +29,11 @@ namespace AsyncTTT_Backend.Controllers
                 {
                     new SqlParameter("@nick", SqlDbType.VarChar)
                     {
-                        Value = nick
+                        Value = credentials.login
                     },
                     new SqlParameter("@pass", SqlDbType.VarChar)
                     {
-                        Value = pass
+                        Value = credentials.password
                     }
                 },
                 ModelExtractor = reader => new DefaultResponse
