@@ -24,12 +24,12 @@ namespace AsyncTTT_Backend.Controllers
         }
 
         // To jest testowe i do wywalenia
-        [HttpGet("{id}", Name = "GetBoardId")]
-        public IEnumerable<User> Get(int id)
+        [HttpGet("{id}", Name = "GetMoves")]
+        public IEnumerable<Move> Get(int id)
         {
-            var sqlCommand = new SimpleSqlCommand<User>()
+            var sqlCommand = new SimpleSqlCommand<Move>()
             {
-                SqlCommand = "SELECT * FROM Players WHERE id_player > @id",
+                SqlCommand = "EXECUTE returnMoves @vIdGame = @Id",
                 Parameters = new SqlParameter[]
                 {
                     new SqlParameter("@id", SqlDbType.Int)
@@ -37,10 +37,12 @@ namespace AsyncTTT_Backend.Controllers
                         Value = id
                     }
                 },
-                ModelExtractor = reader => new User
+                ModelExtractor = reader => new Move
                 {
-                    Id = (int)reader[0],
-                    Id_cred = (int)reader[1]
+                    XCoord = (int)reader[0],
+                    YCoord = (int)reader[1],
+                    id_player = (int)reader[2],
+                    IdGame = id
                 }
             };
 
