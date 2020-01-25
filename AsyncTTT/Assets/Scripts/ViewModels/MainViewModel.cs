@@ -17,6 +17,9 @@ namespace Assets.Scripts.ViewModels
 
         private void Start()
         {
+            _friends.gameObject.SetActive(false);
+            _games.gameObject.SetActive(false);
+
             _friends.OnClickAsObservable().Subscribe(_ =>
             {
                 ViewManager.Main.ChangeView("Friends");
@@ -35,7 +38,8 @@ namespace Assets.Scripts.ViewModels
                 return new CheckLogin().Execute();
             }).Subscribe(_ =>
             {
-
+                _friends.gameObject.SetActive(true);
+                _games.gameObject.SetActive(true);
             }, error =>
             {
                 PopupManager.Main.ShowPopup(error.Message);
@@ -44,10 +48,13 @@ namespace Assets.Scripts.ViewModels
             _register.OnClickAsObservable().SelectMany(_ =>
             {
                 ValidateCredentials();
+                AuthorizationManager.Main.Login = _loginInput.text;
+                AuthorizationManager.Main.Password = _passwordInput.text;
                 return new Register().Execute();
             }).Subscribe(_ =>
             {
-
+                _friends.gameObject.SetActive(true);
+                _games.gameObject.SetActive(true);
             }, error =>
             {
                 PopupManager.Main.ShowPopup(error.Message);
