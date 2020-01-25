@@ -12,36 +12,28 @@ namespace AsyncTTT_Backend.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        [HttpGet]
-        public DefaultResponse Get()
+
+        //zwraca id i id_credentiali usera po podaniu nicku ; sluzy do konwersji nick na id
+        [HttpGet(Name = "GetId")]
+        public IEnumerable<User> Get()
         {
             var credentials = ControllerUtility.GetCredentials(Request.Headers);
-            return new DefaultResponse
-            {
-                Success = true,
-                Message = $"<{credentials.login}> <{credentials.password}>"
-            };
-        }
 
-        // To jest testowe i do wywalenia
-        [HttpGet("{id}", Name = "Get")]
-        public IEnumerable<User> Get(int id)
-        {
             var sqlCommand = new SimpleSqlCommand<User>()
             {
-                SqlCommand = "SELECT * FROM Players WHERE id_player > @id",
+                SqlCommand = "SELECT id_player, c.id_cred, nickname FROM players p join credentials c on(c.id_cred = p.id_cred) WHERE nickname = @nick",
                 Parameters = new SqlParameter[]
                 {
-                    new SqlParameter("@id", SqlDbType.Int)
+                    new SqlParameter("@nick", SqlDbType.VarChar)
                     {
-                        Value = id
+                        Value = credentials.login
                     }
                 },
                 ModelExtractor = reader => new User
-                { 
-                    //user jest na odwrót w bazie i nie mogę tego zmienić bez rozwalania bazy dlatego tu jest 1 i 0, a nie 0 i 1
-                    Id = (int)reader[1],
-                    Id_cred = (int)reader[0]
+                {
+                    Id = (int)reader[0],
+                    Id_cred = (int)reader[1],
+                    nickname = (string)reader[2]
                 }
             };
 

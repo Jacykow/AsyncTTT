@@ -11,41 +11,9 @@ namespace AsyncTTT_Backend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class FriendsInvitationController : ControllerBase
+    public class GameInvitation : ControllerBase
     {
 
-
-        [HttpGet(Name = "GetInvit")]
-        public IEnumerable<FriendsInvitation> GetInvit(int id)
-        {
-
-            var credentials = ControllerUtility.GetCredentials(Request.Headers);
-
-            var sqlCommand = new SimpleSqlCommand<FriendsInvitation>()
-            {
-                SqlCommand = "SELECT * from friends_invitations WHERE sender = (SELECT id_player FROM credentials c join players p on(c.id_cred =  p.id_cred) WHERE nickname = @nick) OR reciever = (SELECT id_player FROM credentials c join players p on(c.id_cred =  p.id_cred) WHERE nickname = @nick)",
-                Parameters = new SqlParameter[]
-                {
-                    new SqlParameter("@nick", SqlDbType.VarChar)
-                    {
-                        Value = credentials.login
-                    }
-                },
-                ModelExtractor = reader => new FriendsInvitation
-                {
-                    Id = (int)reader[0],
-                    Sender = (int)reader[1],
-                    Reciever = (int)reader[2]
-               }
-            };
-
-            return sqlCommand.Execute();
-        }
-
-
-
-
-        //zmiana na nick
         [HttpPost]
         public void Post([FromBody] Invitation value)
         {
