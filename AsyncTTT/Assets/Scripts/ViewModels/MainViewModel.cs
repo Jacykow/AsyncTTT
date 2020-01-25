@@ -30,9 +30,10 @@ namespace Assets.Scripts.ViewModels
                 ViewManager.Main.ChangeView("Games");
             }).AddTo(this);
 
-            _login.OnClickAsObservable().SelectMany(_ =>
+            _login.OnClickAsObservable()
+                .Where(_ => ValidateCredentials())
+                .SelectMany(_ =>
             {
-                ValidateCredentials();
                 AuthorizationManager.Main.Login = _loginInput.text;
                 AuthorizationManager.Main.Password = _passwordInput.text;
                 return new CheckLogin().Execute();
@@ -45,9 +46,10 @@ namespace Assets.Scripts.ViewModels
                 PopupManager.Main.ShowPopup(error.Message);
             }).AddTo(this);
 
-            _register.OnClickAsObservable().SelectMany(_ =>
+            _register.OnClickAsObservable()
+                .Where(_ => ValidateCredentials())
+                .SelectMany(_ =>
             {
-                ValidateCredentials();
                 AuthorizationManager.Main.Login = _loginInput.text;
                 AuthorizationManager.Main.Password = _passwordInput.text;
                 return new Register().Execute();

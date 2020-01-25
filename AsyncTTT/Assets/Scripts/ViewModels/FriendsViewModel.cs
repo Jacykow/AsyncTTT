@@ -2,6 +2,7 @@
 using Assets.Scripts.BLL.Enums;
 using Assets.Scripts.BLL.Models;
 using Assets.Scripts.BLL.Operations;
+using Assets.Scripts.Managers;
 using Assets.Scripts.UI;
 using Assets.Scripts.Utility;
 using UniRx;
@@ -21,7 +22,33 @@ namespace Assets.Scripts.ViewModels
                 friends.Sort((a, b) => -(a.Order - b.Order));
                 foreach (var friend in friends)
                 {
-                    _friendList.AddItem(GetConfiguration(friend));
+                    _friendList.AddItem(GetConfiguration(friend))
+                        .Subscribe(_ =>
+                        {
+                            switch (friend.State)
+                            {
+                                case FriendState.Accepted:
+                                    new CreateGame(friend).Execute()
+                                        .Subscribe(__ =>
+                                    {
+                                        ViewManager.Main.ChangeView("Friends");
+                                    }, exception =>
+                                    {
+                                        PopupManager.Main.ShowPopup(exception.Message);
+                                    });
+                                    break;
+                                case FriendState.Invitation:
+                                    new AcceptFriendInvitation(friend).Execute()
+                                        .Subscribe(__ =>
+                                    {
+                                        ViewManager.Main.ChangeView("Friends");
+                                    }, exception =>
+                                    {
+                                        PopupManager.Main.ShowPopup(exception.Message);
+                                    });
+                                    break;
+                            }
+                        }).AddTo(this);
                 }
             }).AddTo(this);
         }

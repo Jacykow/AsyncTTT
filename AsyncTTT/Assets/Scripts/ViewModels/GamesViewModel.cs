@@ -24,10 +24,22 @@ namespace Assets.Scripts.ViewModels
                 {
                     _gameList.AddItem(GetConfiguration(game)).Subscribe(_ =>
                     {
-                        if (game.State == GameState.YourTurn)
+                        switch (game.State)
                         {
-                            ViewManager.Main.ViewParameters["selected_game"] = game;
-                            ViewManager.Main.ChangeView("Board");
+                            case GameState.Invited:
+                                new AcceptGameInvitation(game).Execute()
+                                    .Subscribe(__ =>
+                                    {
+                                        ViewManager.Main.ChangeView("Games");
+                                    }, exception =>
+                                    {
+                                        PopupManager.Main.ShowPopup(exception.Message);
+                                    });
+                                break;
+                            case GameState.YourTurn:
+                                ViewManager.Main.ViewParameters["selected_game"] = game;
+                                ViewManager.Main.ChangeView("Board");
+                                break;
                         }
                     }).AddTo(this);
                 }
