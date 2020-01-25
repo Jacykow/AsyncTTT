@@ -31,8 +31,9 @@ namespace AsyncTTT_Backend.Controllers
                 },
                 ModelExtractor = reader => new User
                 {
-                    Id = (int)reader[0],
-                    Id_cred = (int)reader[1]
+                    //user jest na odwrót w bazie i nie mogę tego zmienić bez rozwalania bazy dlatego tu jest 1 i 0, a nie 0 i 1
+                    Id = (int)reader[1],
+                    Id_cred = (int)reader[0]
                 }
             };
 

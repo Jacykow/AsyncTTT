@@ -24,7 +24,30 @@ namespace AsyncTTT_Backend.Controllers
             };
         }
 
+        [HttpGet("{id}", Name = "GetGame")]
+        public IEnumerable<Game> Get(int id)
+        {
+            var sqlCommand = new SimpleSqlCommand<Game>()
+            {
+                SqlCommand = "SELECT * from games WHERE player1 = @id or player2 = @id",
+                Parameters = new SqlParameter[]
+                {
+                    new SqlParameter("@id", SqlDbType.Int)
+                    {
+                        Value = id
+                    }
+                },
+                ModelExtractor = reader => new Game
+                {
+                    id_game = (int)reader[0],
+                    id_player1 = (int)reader[1],
+                    id_player2 = (int)reader[2],
+                    id_current_turn = (int)reader[3]
+                }
+            };
 
+            return sqlCommand.Execute();
+        }
 
         [HttpPost]
         public void Post([FromBody] Invitation value)

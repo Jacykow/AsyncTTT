@@ -23,13 +23,25 @@ namespace AsyncTTT_Backend.SQL
                 {
                     cmd.Parameters.AddRange(simpleSqlCommand.Parameters);
                 }
-                sqlConnection.Open();
 
-                using var reader = cmd.ExecuteReader();
-                while (reader.Read())
+                sqlConnection.Open();
+                cmd.Transaction = sqlConnection.BeginTransaction();
+
+                if (simpleSqlCommand.Query != false && simpleSqlCommand.ModelExtractor != null)
                 {
-                    modelList.Add(simpleSqlCommand.ModelExtractor(reader));
+                    using var reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        modelList.Add(simpleSqlCommand.ModelExtractor(reader));
+                    }
                 }
+                else
+                {
+                    cmd.ExecuteNonQuery();
+                    modelList = null;
+                }
+
+                cmd.Transaction.Commit();
             }
             return modelList;
         }
