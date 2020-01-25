@@ -57,7 +57,7 @@ namespace AsyncTTT_Backend.Controllers
 
         //tutaj blad jesli nick taki istnieje
         [HttpPost]
-        public void Post([FromBody] Credentials value)
+        public void Post()
         {
             var credentials = ControllerUtility.GetCredentials(Request.Headers);
 
