@@ -79,9 +79,28 @@ namespace Assets.Scripts.ViewModels
                     }
                 }).AddTo(this);
 
-            _fieldClickSubject.Subscribe(clickCoords =>
+            _fieldClickSubject.SelectMany(clickCoords =>
             {
-                Debug.Log(clickCoords);
+                return new MakeMove(clickCoords).Execute();
+            }).Subscribe(moveResponse =>
+            {
+                if (moveResponse.GameEnded)
+                {
+                    PopupManager.Main.ShowPopup("Wygrałeś!");
+                    ViewManager.Main.ChangeView("Main");
+                    return;
+                }
+
+                for (int y = 0; y < _boardSize; y++)
+                {
+                    for (int x = 0; x < _boardSize; x++)
+                    {
+                        _fields[y, x].GetComponent<Button>().interactable = false;
+                    }
+                }
+                _fields[moveResponse.MoveCoords.y, moveResponse.MoveCoords.x]
+                    .transform.GetChild(0).GetComponent<Image>().color =
+                    (Color.gray * 0.5f + Color.green * 1.5f) / 2;
             }).AddTo(this);
         }
     }
