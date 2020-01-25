@@ -30,22 +30,22 @@ namespace Assets.Scripts.ViewModels
                                 case FriendState.Accepted:
                                     new CreateGame(friend).Execute()
                                         .Subscribe(__ =>
-                                    {
-                                        ViewManager.Main.ChangeView("Friends");
-                                    }, exception =>
-                                    {
-                                        PopupManager.Main.ShowPopup(exception.Message);
-                                    });
+                                        {
+                                            ViewManager.Main.Back();
+                                        }, exception =>
+                                        {
+                                            PopupManager.Main.ShowPopup(exception.Message);
+                                        });
                                     break;
                                 case FriendState.Invitation:
                                     new AcceptFriendInvitation(friend).Execute()
                                         .Subscribe(__ =>
-                                    {
-                                        ViewManager.Main.ChangeView("Friends");
-                                    }, exception =>
-                                    {
-                                        PopupManager.Main.ShowPopup(exception.Message);
-                                    });
+                                        {
+                                            ViewManager.Main.Back();
+                                        }, exception =>
+                                        {
+                                            PopupManager.Main.ShowPopup(exception.Message);
+                                        });
                                     break;
                             }
                         }).AddTo(this);

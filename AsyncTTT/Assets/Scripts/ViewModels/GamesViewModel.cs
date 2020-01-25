@@ -30,7 +30,7 @@ namespace Assets.Scripts.ViewModels
                                 new AcceptGameInvitation(game).Execute()
                                     .Subscribe(__ =>
                                     {
-                                        ViewManager.Main.ChangeView("Games");
+                                        ViewManager.Main.Back();
                                     }, exception =>
                                     {
                                         PopupManager.Main.ShowPopup(exception.Message);

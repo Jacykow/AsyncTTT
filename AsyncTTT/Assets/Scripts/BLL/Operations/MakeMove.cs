@@ -1,13 +1,11 @@
-﻿using Assets.Scripts.BLL.Models;
-using Gulib.UniRx;
+﻿using Gulib.UniRx;
 using System;
 using UniRx;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 namespace Assets.Scripts.BLL.Operations
 {
-    public class MakeMove : IOperation<MakeMoveResponse>
+    public class MakeMove : IOperation<Vector2Int>
     {
         private readonly Vector2Int _moveCoords;
 
@@ -16,9 +14,9 @@ namespace Assets.Scripts.BLL.Operations
             _moveCoords = moveCoords;
         }
 
-        public IObservable<MakeMoveResponse> Execute()
+        public IObservable<Vector2Int> Execute()
         {
-            return Observable.Return(new MakeMoveResponse { MoveCoords = _moveCoords, GameEnded = Random.value > 0.5f });
+            return Observable.Return(_moveCoords);
         }
     }
 }

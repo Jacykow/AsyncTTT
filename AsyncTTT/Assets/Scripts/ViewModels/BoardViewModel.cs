@@ -58,7 +58,7 @@ namespace Assets.Scripts.ViewModels
             if (_game == null)
             {
                 PopupManager.Main.ShowPopup("Nie znaleziono wybranej gry");
-                ViewManager.Main.ChangeView("Main");
+                ViewManager.Main.Back();
                 return;
             }
 
@@ -84,13 +84,6 @@ namespace Assets.Scripts.ViewModels
                 return new MakeMove(clickCoords).Execute();
             }).Subscribe(moveResponse =>
             {
-                if (moveResponse.GameEnded)
-                {
-                    PopupManager.Main.ShowPopup("Wygrałeś!");
-                    ViewManager.Main.ChangeView("Main");
-                    return;
-                }
-
                 for (int y = 0; y < _boardSize; y++)
                 {
                     for (int x = 0; x < _boardSize; x++)
@@ -98,7 +91,7 @@ namespace Assets.Scripts.ViewModels
                         _fields[y, x].GetComponent<Button>().interactable = false;
                     }
                 }
-                _fields[moveResponse.MoveCoords.y, moveResponse.MoveCoords.x]
+                _fields[moveResponse.y, moveResponse.x]
                     .transform.GetChild(0).GetComponent<Image>().color =
                     (Color.gray * 0.5f + Color.green * 1.5f) / 2;
             }).AddTo(this);

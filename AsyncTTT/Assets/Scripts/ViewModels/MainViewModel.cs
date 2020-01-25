@@ -17,8 +17,16 @@ namespace Assets.Scripts.ViewModels
 
         private void Start()
         {
-            _friends.gameObject.SetActive(false);
-            _games.gameObject.SetActive(false);
+            if (string.IsNullOrEmpty(AuthorizationManager.Main.Login) == false)
+            {
+                _loginInput.text = AuthorizationManager.Main.Login;
+                _passwordInput.text = AuthorizationManager.Main.Password;
+            }
+            else
+            {
+                _friends.gameObject.SetActive(false);
+                _games.gameObject.SetActive(false);
+            }
 
             _friends.OnClickAsObservable().Subscribe(_ =>
             {

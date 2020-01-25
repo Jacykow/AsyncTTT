@@ -1,5 +1,4 @@
 ﻿using Assets.Scripts.Api.Config;
-using Assets.Scripts.Api.Models;
 using Gulib.Networking;
 using Gulib.UniRx;
 using System;
@@ -7,7 +6,7 @@ using UniRx;
 
 namespace Assets.Scripts.Api.Operations
 {
-    public class CheckCredentials : IOperation<DefaultResponse>
+    public class CheckCredentials : IOperation<Unit>
     {
         private readonly string _login;
         private readonly string _password;
@@ -18,7 +17,7 @@ namespace Assets.Scripts.Api.Operations
             _password = password;
         }
 
-        public IObservable<DefaultResponse> Execute()
+        public IObservable<Unit> Execute()
         {
             return new UnityWebRequestBuilder()
             {
@@ -30,7 +29,7 @@ namespace Assets.Scripts.Api.Operations
             {
                 return response;
             })
-            .SelectModel<DefaultResponse>();
+            .SelectModel<Unit>();
         }
     }
 }
