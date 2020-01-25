@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace AsyncTTT_Backend.Models
 {
-    public class FirendsInvitation
+    public class FriendsInvitation
     {
         public int Id { get; set; }
         public int Sender { get; set; }
