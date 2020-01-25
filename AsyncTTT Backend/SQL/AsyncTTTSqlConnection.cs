@@ -23,9 +23,11 @@ namespace AsyncTTT_Backend.SQL
                 {
                     cmd.Parameters.AddRange(simpleSqlCommand.Parameters);
                 }
-                sqlConnection.Open();
 
-                if (simpleSqlCommand.ModelExtractor != null)
+                sqlConnection.Open();
+                cmd.Transaction = sqlConnection.BeginTransaction();
+
+                if (simpleSqlCommand.Query != false && simpleSqlCommand.ModelExtractor != null)
                 {
                     using var reader = cmd.ExecuteReader();
                     while (reader.Read())
@@ -35,8 +37,11 @@ namespace AsyncTTT_Backend.SQL
                 }
                 else
                 {
+                    cmd.ExecuteNonQuery();
                     modelList = null;
                 }
+
+                cmd.Transaction.Commit();
             }
             return modelList;
         }
