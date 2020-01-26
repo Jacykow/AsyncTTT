@@ -158,14 +158,15 @@ namespace AsyncTTT_Backend.Controllers
                             {
                                 if ((tab[i, j] == id_player1 && tab[i, j + 1] == id_player1 && tab[i, j + 2] == id_player1 && tab[i, j + 3] == id_player1 && tab[i, j + 4] == id_player1) || (tab[i, j] == id_player2 && tab[i, j + 1] == id_player2 && tab[i, j + 2] == id_player2 && tab[i, j + 3] == id_player2 && tab[i, j + 4] == id_player2))
                                 {
-                                    winner = tab[i, j];
+                                    winner = tab[i,j];
                                     break;
                                 }
                                 if ((tab[j, i] == id_player1 && tab[j, i + 1] == id_player1 && tab[j, i + 2] == id_player1 && tab[j, i + 3] == id_player1 && tab[j, i + 4] == id_player1) || (tab[j, i] == id_player2 && tab[j, i + 1] == id_player2 && tab[j, i + 2] == id_player2 && tab[j, i + 3] == id_player2 && tab[j, i + 4] == id_player2))
                                 {
-                                    winner = tab[i, j];
+                                    winner = tab[i,j];
                                     break;
                                 }
+
                             }
                         }
 

@@ -87,6 +87,24 @@ namespace AsyncTTT_Backend.Controllers
             };
 
             sqlCommand.Execute();
+
+            var sqlCommand2 = new SimpleSqlCommand<Credentials>()
+            {
+                SqlCommand = "DELETE FROM games_invitations WHERE sender = @id1 AND reciever = @id2",
+                Parameters = new SqlParameter[]
+                {
+                    new SqlParameter("@id1", SqlDbType.Int)
+                    {
+                        Value = value.IdPlayer1
+                    },
+                    new SqlParameter("@id2", SqlDbType.Int)
+                    {
+                        Value = value.IdPlayer2
+                    }
+                }
+            };
+
+            sqlCommand2.Execute();
         }
     }
 }
