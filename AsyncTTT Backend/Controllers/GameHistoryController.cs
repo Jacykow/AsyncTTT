@@ -22,7 +22,7 @@ namespace AsyncTTT_Backend.Controllers
 
             var sqlCommand = new SimpleSqlCommand<GameInHistory>()
             {
-                SqlCommand = "SELECT id_ghis, player1, player2, score FROM games_in_history WHERE player1 = (SELECT p.id_player FROM credentials c join players p on (c.id_cred = p.id_cred) WHERE c.nickname = @nick)  or player2 = (SELECT p.id_player FROM credentials c join players p on (c.id_cred = p.id_cred) WHERE c.nickname = @nick)",
+                SqlCommand = "SELECT id_ghis, player1, player2, score, CONCAT(CONVERT(varchar(10), player1),'vs',CONVERT(varchar(10), player2)) FROM games_in_history WHERE player1 = (SELECT p.id_player FROM credentials c join players p on (c.id_cred = p.id_cred) WHERE c.nickname = @nick)  or player2 = (SELECT p.id_player FROM credentials c join players p on (c.id_cred = p.id_cred) WHERE c.nickname = @nick)",
                 Parameters = new SqlParameter[]
                 {
                     new SqlParameter("@nick", SqlDbType.VarChar)
@@ -35,7 +35,8 @@ namespace AsyncTTT_Backend.Controllers
                     id_game = (int)reader[0],
                     id_player1 = (int)reader[1],
                     id_player2 = (int)reader[2],
-                    score = (int)reader[3]
+                    score = (int)reader[3],
+                    name = (string)reader[4]
                 }
             };
 
