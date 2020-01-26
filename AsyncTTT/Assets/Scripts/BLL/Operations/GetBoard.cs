@@ -39,7 +39,7 @@ namespace Assets.Scripts.BLL.Operations
                     {
                         _game.Board[move.XCoord, move.YCoord] =
                             move.id_player == 0 ? -1 :
-                            move.id_player == playerId ? 0 : -1;
+                            move.id_player == playerId ? 0 : 1;
                     }
                     return _game;
                 });
