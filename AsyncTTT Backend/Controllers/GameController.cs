@@ -23,7 +23,7 @@ namespace AsyncTTT_Backend.Controllers
 
             var sqlCommand = new SimpleSqlCommand<User>()
             {
-                SqlCommand = "SELECT sender, c.id_cred, nickname from games_invitation join players p on (sender =  id_player) join credentials c on (c.id_cred = p.id_cred) WHERE reciever = (SELECT id_player FROM credentials c join players p on(c.id_cred =  p.id_cred) WHERE nickname = @nick)",
+                SqlCommand = "SELECT sender, c.id_cred, nickname from games_invitations join players p on (sender =  id_player) join credentials c on (c.id_cred = p.id_cred) WHERE reciever = (SELECT id_player FROM credentials c join players p on(c.id_cred =  p.id_cred) WHERE nickname = @nick)",
                 Parameters = new SqlParameter[]
                 {
                     new SqlParameter("@nick", SqlDbType.VarChar)
@@ -43,7 +43,7 @@ namespace AsyncTTT_Backend.Controllers
         }
 
 
-        //podajesz nick i sie robi gra bez drugiego playera
+      /*  //podajesz nick i sie robi gra bez drugiego playera
         [HttpPost]
         public void Post()
         {
@@ -62,7 +62,7 @@ namespace AsyncTTT_Backend.Controllers
             };
 
             sqlCommand.Execute();
-        }
+        }*/
         
 
         //podajesz id gry i jsona o strukturze usera (dowolne wartosci oprocz Id) i gra posiada drugiego gracza (co oznacza, ze zaakceptowal zaproszenie)
@@ -72,16 +72,16 @@ namespace AsyncTTT_Backend.Controllers
 
             var sqlCommand = new SimpleSqlCommand<Credentials>()
             {
-                SqlCommand = "UPDATE games SET player2 = @id_p WHERE id_game = @id_g",
+                SqlCommand = "EXECUTE addGame @vPlayer1 = @id1, @vPlayer2 = @id2, @vId_version = 1",
                 Parameters = new SqlParameter[]
                 {
-                    new SqlParameter("@id_g", SqlDbType.VarChar)
+                    new SqlParameter("@id1", SqlDbType.Int)
                     {
-                        Value = value.Id_game
+                        Value = value.IdPlayer1
                     },
-                    new SqlParameter("@id_p", SqlDbType.VarChar)
+                    new SqlParameter("@id2", SqlDbType.Int)
                     {
-                        Value = value.Id_player
+                        Value = value.IdPlayer2
                     }
                 }
             };
