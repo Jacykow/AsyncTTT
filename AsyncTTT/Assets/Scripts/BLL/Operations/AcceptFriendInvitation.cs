@@ -1,6 +1,10 @@
-﻿using Assets.Scripts.BLL.Models;
+﻿using Assets.Scripts.Api.Config;
+using Assets.Scripts.Api.Models;
+using Assets.Scripts.Api.Operations;
+using Assets.Scripts.BLL.Models;
 using Gulib.UniRx;
 using System;
+using System.Net.Http;
 using UniRx;
 
 namespace Assets.Scripts.BLL.Operations
@@ -16,7 +20,14 @@ namespace Assets.Scripts.BLL.Operations
 
         public IObservable<Unit> Execute()
         {
-            return Observable.ReturnUnit();
+            return new AzureApiRequest(
+                    ApiConfig.Endpoints.AzureFriendsInvitation,
+                    HttpMethod.Put)
+                .SetBodyModel(new Invitation
+                {
+                    Reciever = _friend.Id
+                })
+                .Execute();
         }
     }
 }

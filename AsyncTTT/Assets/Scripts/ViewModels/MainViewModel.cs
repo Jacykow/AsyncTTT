@@ -51,6 +51,8 @@ namespace Assets.Scripts.ViewModels
                 _games.gameObject.SetActive(true);
             }, error =>
             {
+                _friends.gameObject.SetActive(false);
+                _games.gameObject.SetActive(false);
                 PopupManager.Main.ShowPopup(error.Message);
             }).AddTo(this);
 
@@ -67,6 +69,8 @@ namespace Assets.Scripts.ViewModels
                 _games.gameObject.SetActive(true);
             }, error =>
             {
+                _friends.gameObject.SetActive(false);
+                _games.gameObject.SetActive(false);
                 PopupManager.Main.ShowPopup(error.Message);
             }).AddTo(this);
         }

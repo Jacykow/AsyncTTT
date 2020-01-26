@@ -6,6 +6,7 @@ namespace Assets.Scripts.BLL.Models
     {
         public string Name { get; set; }
         public FriendState State { get; set; }
+        public int Id { get; set; }
 
         public int Order => State == FriendState.Invitation ? 1 : 0;
     }

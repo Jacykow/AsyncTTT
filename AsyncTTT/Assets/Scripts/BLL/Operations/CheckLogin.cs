@@ -1,7 +1,8 @@
-﻿using Assets.Scripts.Api.Operations;
-using Assets.Scripts.Managers;
+﻿using Assets.Scripts.Api.Config;
+using Assets.Scripts.Api.Operations;
 using Gulib.UniRx;
 using System;
+using System.Net.Http;
 using UniRx;
 
 namespace Assets.Scripts.BLL.Operations
@@ -10,10 +11,14 @@ namespace Assets.Scripts.BLL.Operations
     {
         public IObservable<Unit> Execute()
         {
-            return new CheckCredentials(
-                AuthorizationManager.Main.Login,
-                AuthorizationManager.Main.Password
-                ).Execute();
+            return new AzureApiQuery<bool>(ApiConfig.Endpoints.AzureCredentials, HttpMethod.Get).Execute().Select(success =>
+            {
+                if (success == false)
+                {
+                    throw new Exception("Niepoprawne dane.");
+                }
+                return Unit.Default;
+            });
         }
     }
 }
