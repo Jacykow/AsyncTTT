@@ -14,10 +14,9 @@ namespace AsyncTTT_Backend.Controllers
     {
 
         //zwraca id i id_credentiali usera po podaniu nicku ; sluzy do konwersji nick na id
-        [HttpGet(Name = "GetId")]
-        public IEnumerable<User> GetId()
+        [HttpGet("nick/{login}", Name = "GetId")]
+        public IEnumerable<User> GetId(string login)
         {
-            var credentials = ControllerUtility.GetCredentials(Request.Headers);
 
             var sqlCommand = new SimpleSqlCommand<User>()
             {
@@ -26,7 +25,7 @@ namespace AsyncTTT_Backend.Controllers
                 {
                     new SqlParameter("@nick", SqlDbType.VarChar)
                     {
-                        Value = credentials.login
+                        Value = login
                     }
                 },
                 ModelExtractor = reader => new User
@@ -41,7 +40,7 @@ namespace AsyncTTT_Backend.Controllers
         }
 
         //podajesz id i dostajesz nick ; sluzy do konwersji id na nick
-        [HttpGet("{id}", Name = "GetNick")]
+        [HttpGet("id/{id}", Name = "GetNick")]
         public IEnumerable<User> GetNick(int id)
         {
 
