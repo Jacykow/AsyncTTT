@@ -16,14 +16,14 @@ namespace AsyncTTT_Backend.Controllers
 
         //zaproszenia do gier od kogoś. podajesz nick i zwraca Ci zaproszenia do gier, ktorych jestes odbiorca
         [HttpGet(Name = "GetGameInvit")]
-        public IEnumerable<GamesInvitation> GetGameInvit()
+        public IEnumerable<User> GetGameInvit()
         {
 
             var credentials = ControllerUtility.GetCredentials(Request.Headers);
 
-            var sqlCommand = new SimpleSqlCommand<GamesInvitation>()
+            var sqlCommand = new SimpleSqlCommand<User>()
             {
-                SqlCommand = "SELECT * from games_invitations WHERE reciever = (SELECT id_player FROM credentials c join players p on(c.id_cred =  p.id_cred) WHERE nickname = @nick)",
+                SqlCommand = "SELECT sender, c.id_cred, nickname from games_invitation join players p on (sender =  id_player) join credentials c on (c.id_cred = p.id_cred) WHERE reciever = (SELECT id_player FROM credentials c join players p on(c.id_cred =  p.id_cred) WHERE nickname = @nick)",
                 Parameters = new SqlParameter[]
                 {
                     new SqlParameter("@nick", SqlDbType.VarChar)
@@ -31,11 +31,11 @@ namespace AsyncTTT_Backend.Controllers
                         Value = credentials.login
                     }
                 },
-                ModelExtractor = reader => new GamesInvitation
+                ModelExtractor = reader => new User
                 {
                     Id = (int)reader[0],
-                    Sender = (int)reader[1],
-                    Reciever = (int)reader[2]
+                    Id_cred = (int)reader[1],
+                    nickname = (string)reader[2]
                 }
             };
 

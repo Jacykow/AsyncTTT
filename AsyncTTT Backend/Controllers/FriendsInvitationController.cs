@@ -23,7 +23,7 @@ namespace AsyncTTT_Backend.Controllers
 
             var sqlCommand = new SimpleSqlCommand<User>()
             {
-                SqlCommand = "SELECT sender, c.id_cred, nickname from friends_invitations join players p on (sender =  id_player) join credentials c on (c.id_cred = c.id_cred) WHERE reciever = (SELECT id_player FROM credentials c join players p on(c.id_cred =  p.id_cred) WHERE nickname = @nick)",
+                SqlCommand = "SELECT sender, c.id_cred, nickname from friends_invitations join players p on (sender =  id_player) join credentials c on (c.id_cred = p.id_cred) WHERE reciever = (SELECT id_player FROM credentials c join players p on(c.id_cred =  p.id_cred) WHERE nickname = @nick)",
                 Parameters = new SqlParameter[]
                 {
                     new SqlParameter("@nick", SqlDbType.VarChar)
@@ -78,7 +78,7 @@ namespace AsyncTTT_Backend.Controllers
 
             var sqlCommand = new SimpleSqlCommand<Credentials>()
             {
-                SqlCommand = "EXECUTE addFriendship @vNick = @nick, @vPlayer2 = @rec",
+                SqlCommand = "EXECUTE addFriendship @vPlayer1 = @nick, @vPlayer2 = @rec",
                 Parameters = new SqlParameter[]
                 {
                     new SqlParameter("@nick", SqlDbType.VarChar)
