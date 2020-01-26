@@ -9,6 +9,7 @@ namespace Assets.Scripts.BLL.Models
         public GameState State { get; set; }
         public int[,] Board { get; set; }
         public int TurnOddity { get; set; } = 1;
+        public int OpponentId { get; set; }
 
         public int Order =>
             State == GameState.Invited ? 3 :
