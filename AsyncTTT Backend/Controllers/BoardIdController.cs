@@ -10,7 +10,7 @@ namespace AsyncTTT_Backend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class BoardIdController: ControllerBase
+    public class BoardIdController : ControllerBase
     {
 
         //podajesz id gry i dostajesz wszystkie ruchy na planszy
@@ -75,22 +75,7 @@ namespace AsyncTTT_Backend.Controllers
                 }
             };
 
-
             sqlCommand.Execute();
-
-            //sprawdzanie zwyciezcy
-
-            var tab = new int[20, 20];
-
-            for (int i = 0; i < 20; i++)
-            {
-                for (int j = 0; j < 20; j++)
-                {
-                    tab[i, j] = -1;
-                }
-            }
-
-            List<Move> movesList = new List<Move>();
 
             var sqlCommand1 = new SimpleSqlCommand<Move>()
             {
@@ -111,118 +96,93 @@ namespace AsyncTTT_Backend.Controllers
                 }
             };
 
-            movesList = sqlCommand1.Execute();
+            var movesList = sqlCommand1.Execute();
 
-
-            if(movesList.Count != 0)
+            if (movesList.Count == 400)
             {
-                //IF MOVESLIST SIZE == 40 REMIS
-                if (movesList.Count == 40)
+                var sqlCommandR = new SimpleSqlCommand<User>()
                 {
-                    var sqlCommandR = new SimpleSqlCommand<User>()
+                    SqlCommand = "EXECUTE addResult @vId_game = @idgame, @vId_Score = 0",
+                    Parameters = new SqlParameter[]
                     {
-                        SqlCommand = "EXECUTE addResult @vId_game = @idgame, @vId_Score = 0",
-                        Parameters = new SqlParameter[]
-                        {
-                        new SqlParameter("@idgame", SqlDbType.Int)
-                        {
-                            Value = value.IdGame
-                        }
-                        }
-                    };
-
-                    sqlCommandR.Execute();
-                }
-                else
-                {
-                    int id_player1 = movesList[0].id_player;
-                    int id_player2 = 0;
-                    int winner = 0;
-
-                    for (int i = 0; i < movesList.Count; i++)
-                    {
-                        if (movesList[i].id_player != id_player1)
-                            id_player2 = movesList[i].id_player;
-                        tab[movesList[i].XCoord, movesList[i].YCoord] = movesList[i].id_player;
+                            new SqlParameter("@idgame", SqlDbType.Int)
+                            {
+                                Value = value.IdGame
+                            }
                     }
+                };
 
-                    //IF ID_PLAYER2 == 0 OD RAZU DODAJ MOVE
-
-                    if (id_player2 != 0)
-                    {
-                        for (int i = 0; i < 20; i++)
-                        {
-                            if (winner != 0)
-                                break;
-                            for (int j = 0; j <= 15; j++)
-                            {
-                                if ((tab[i, j] == id_player1 && tab[i, j + 1] == id_player1 && tab[i, j + 2] == id_player1 && tab[i, j + 3] == id_player1 && tab[i, j + 4] == id_player1) || (tab[i, j] == id_player2 && tab[i, j + 1] == id_player2 && tab[i, j + 2] == id_player2 && tab[i, j + 3] == id_player2 && tab[i, j + 4] == id_player2))
-                                {
-                                    winner = tab[i,j];
-                                    break;
-                                }
-                                if ((tab[j, i] == id_player1 && tab[j, i + 1] == id_player1 && tab[j, i + 2] == id_player1 && tab[j, i + 3] == id_player1 && tab[j, i + 4] == id_player1) || (tab[j, i] == id_player2 && tab[j, i + 1] == id_player2 && tab[j, i + 2] == id_player2 && tab[j, i + 3] == id_player2 && tab[j, i + 4] == id_player2))
-                                {
-                                    winner = tab[i,j];
-                                    break;
-                                }
-
-                            }
-                        }
-
-                        for (int i = 0; i <= 15; i++)
-                        {
-                            if (winner != 0)
-                                break;
-                            for (int j = 0; j <= 15; j++)
-                            {
-                                if ((tab[i, j] == id_player1 && tab[i + 1, j + 1] == id_player1 && tab[i + 2, j + 2] == id_player1 && tab[i + 3, j + 3] == id_player1 && tab[i + 4, j + 4] == id_player1) || (tab[i, j] == id_player2 && tab[i + 1, j + 1] == id_player2 && tab[i + 2, j + 2] == id_player2 && tab[i + 3, j + 3] == id_player2 && tab[i + 4, j + 4] == id_player2))
-                                {
-                                    winner = tab[i, j];
-                                    break;
-                                }
-                            }
-                        }
-
-                        for (int i = 19; i >= 4; i--)
-                        {
-                            if (winner != 0)
-                                break;
-                            for (int j = 19; j >= 4; j--)
-                            {
-                                if ((tab[i, j] == id_player1 && tab[i - 1, j - 1] == id_player1 && tab[i - 2, j - 2] == id_player1 && tab[i - 3, j - 3] == id_player1 && tab[i - 4, j - 4] == id_player1) || (tab[i, j] == id_player2 && tab[i - 1, j - 1] == id_player2 && tab[i - 2, j - 2] == id_player2 && tab[i - 3, j - 3] == id_player2 && tab[i - 4, j - 4] == id_player2))
-                                {
-                                    winner = tab[i, j];
-                                    break;
-                                }
-                            }
-                        }
-                        //IF WINNER != 0 to gra do historii z wynikiem
-                        if (winner != 0)
-                        {
-                            var sqlCommandW = new SimpleSqlCommand<User>()
-                            {
-                                SqlCommand = "EXECUTE addResult @vId_game = @idgame, @vId_Score = @idwinner",
-                                Parameters = new SqlParameter[]
-                                {
-                                new SqlParameter("@idgame", SqlDbType.Int)
-                                {
-                                    Value = value.IdGame
-                                },
-                                new SqlParameter("@idwinner", SqlDbType.Int)
-                                {
-                                    Value = winner
-                                }
-                                }
-                            };
-
-                            sqlCommandW.Execute();
-                        }
-                    }
-                }
-
-
+                sqlCommandR.Execute();
+                return;
             }
+
+            int[,] board = new int[20, 20];
+            for (int y = 0; y < 20; y++)
+            {
+                for (int x = 0; x < 20; x++)
+                {
+                    board[x, y] = -1;
+                }
+            }
+            foreach (var move in movesList)
+            {
+                board[move.XCoord, move.YCoord] = move.id_player;
+            }
+
+            int winner = 0;
+            for (int y = 2; y < 18 && winner == 0; y++)
+            {
+                for (int x = 2; x < 18 && winner == 0; x++)
+                {
+                    if (board[x, y] == -1)
+                    {
+                        continue;
+                    }
+                    if (CheckVictory(board, x, y, 1, 0) ||
+                        CheckVictory(board, x, y, 1, 1) ||
+                        CheckVictory(board, x, y, 0, 1) ||
+                        CheckVictory(board, x, y, -1, 1))
+                    {
+                        winner = board[x, y];
+                    }
+                }
+            }
+
+            if (winner != 0)
+            {
+                var sqlCommandW = new SimpleSqlCommand<User>()
+                {
+                    SqlCommand = "EXECUTE addResult @vId_game = @idgame, @vId_Score = @idwinner",
+                    Parameters = new SqlParameter[]
+                    {
+                            new SqlParameter("@idgame", SqlDbType.Int)
+                            {
+                                Value = value.IdGame
+                            },
+                            new SqlParameter("@idwinner", SqlDbType.Int)
+                            {
+                                Value = winner
+                            }
+                    }
+                };
+                sqlCommandW.Execute();
+            }
+        }
+
+        private bool CheckVictory(int[,] board, int x, int y, int dx, int dy)
+        {
+            for (int d = 1; d <= 3; d++)
+            {
+                if (board[x + dx * d, y + dy * d] != board[x, y])
+                {
+                    return false;
+                }
+                if (board[x - dx * d, y - dy * d] != board[x, y])
+                {
+                    return false;
+                }
+            }
+            return true;
         }
     }
 }
