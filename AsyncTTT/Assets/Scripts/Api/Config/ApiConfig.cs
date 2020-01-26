@@ -4,11 +4,8 @@
     {
         public static class Endpoints
         {
-#if LOCAL_API
-            public static string AZURE = "https://localhost:44388/api";
-#else
             public static string AZURE = "https://atttgame.azurewebsites.net/api";
-#endif
+            public static string AzureUser => AZURE + "/user";
             public static string AzureCredentials => AZURE + "/credentials";
             public static string AzureBoard => AZURE + "/board";
             public static string AzureBoardId => AZURE + "/boardid";

@@ -31,8 +31,22 @@ namespace Assets.Scripts.BLL.Operations
                     }));
                     return Unit.Default;
                 });
+            var friendOperation = new AzureApiQuery<List<User>>(
+                    ApiConfig.Endpoints.AzureFriends,
+                    HttpMethod.Get)
+                .Execute()
+                .Select(invitingUsers =>
+                {
+                    friends.AddRange(invitingUsers.Select(invitingUser => new Friend
+                    {
+                        Name = invitingUser.nickname,
+                        State = FriendState.Accepted,
+                        Id = invitingUser.Id
+                    }));
+                    return Unit.Default;
+                });
             return Observable
-                .WhenAll(friendInvitationsOperation)
+                .WhenAll(friendInvitationsOperation, friendOperation)
                 .Select(_ => friends);
         }
     }
