@@ -5,8 +5,10 @@ using Assets.Scripts.BLL.Operations;
 using Assets.Scripts.Managers;
 using Assets.Scripts.UI;
 using Assets.Scripts.Utility;
+using TMPro;
 using UniRx;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Assets.Scripts.ViewModels
 {
@@ -14,6 +16,10 @@ namespace Assets.Scripts.ViewModels
     {
         [SerializeField]
         private ListController _friendList;
+        [SerializeField]
+        private Button _requestFriendButton;
+        [SerializeField]
+        private TMP_InputField _friendNameInput;
 
         private void Start()
         {
@@ -34,6 +40,7 @@ namespace Assets.Scripts.ViewModels
                                             ViewManager.Main.Back();
                                         }, exception =>
                                         {
+                                            ViewManager.Main.Back();
                                             PopupManager.Main.ShowPopup(exception.Message);
                                         });
                                     break;
@@ -44,6 +51,7 @@ namespace Assets.Scripts.ViewModels
                                             ViewManager.Main.Back();
                                         }, exception =>
                                         {
+                                            ViewManager.Main.Back();
                                             PopupManager.Main.ShowPopup(exception.Message);
                                         });
                                     break;
@@ -51,6 +59,13 @@ namespace Assets.Scripts.ViewModels
                         }).AddTo(this);
                 }
             }).AddTo(this);
+
+            _requestFriendButton.OnClickAsObservable().SelectMany(_ =>
+            {
+                return new InviteFriend(_friendNameInput.text).Execute();
+            }).Subscribe(_ => { },
+                    exception => PopupManager.Main.ShowPopup(exception.Message))
+                .AddTo(this);
         }
 
         private ConfigurationDictionary GetConfiguration(Friend friend)
