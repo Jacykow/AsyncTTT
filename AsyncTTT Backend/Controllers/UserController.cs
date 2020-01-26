@@ -15,7 +15,7 @@ namespace AsyncTTT_Backend.Controllers
 
         //zwraca id i id_credentiali usera po podaniu nicku ; sluzy do konwersji nick na id
         [HttpGet(Name = "GetId")]
-        public IEnumerable<User> Get()
+        public IEnumerable<User> GetId()
         {
             var credentials = ControllerUtility.GetCredentials(Request.Headers);
 
@@ -40,11 +40,31 @@ namespace AsyncTTT_Backend.Controllers
             return sqlCommand.Execute();
         }
 
-
-        [HttpPost]
-        public void Post([FromBody] User value)
+        //podajesz id i dostajesz nick ; sluzy do konwersji id na nick
+        [HttpGet("{id}", Name = "GetNick")]
+        public IEnumerable<User> GetNick(int id)
         {
 
+            var sqlCommand = new SimpleSqlCommand<User>()
+            {
+                SqlCommand = "SELECT id_player, c.id_cred, nickname FROM players p join credentials c on(c.id_cred = p.id_cred) WHERE id_player = @id",
+                Parameters = new SqlParameter[]
+                {
+                    new SqlParameter("@id", SqlDbType.Int)
+                    {
+                        Value = id
+                    }
+                },
+                ModelExtractor = reader => new User
+                {
+                    Id = (int)reader[0],
+                    Id_cred = (int)reader[1],
+                    nickname = (string)reader[2]
+                }
+            };
+
+            return sqlCommand.Execute();
         }
+
     }
 }

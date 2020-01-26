@@ -14,9 +14,9 @@ namespace AsyncTTT_Backend.Controllers
     public class FriendsInvitationController : ControllerBase
     {
 
-
+        //podajesz w headerze nick i dostajesz zaproszenia do siebie albo od siebie
         [HttpGet(Name = "GetInvit")]
-        public IEnumerable<FriendsInvitation> GetInvit(int id)
+        public IEnumerable<FriendsInvitation> GetInvit()
         {
 
             var credentials = ControllerUtility.GetCredentials(Request.Headers);
@@ -45,7 +45,7 @@ namespace AsyncTTT_Backend.Controllers
 
 
 
-        //zmiana na nick
+        //podajesz w headerze nick, body opisane w api na trello
         [HttpPost]
         public void Post([FromBody] Invitation value)
         {
