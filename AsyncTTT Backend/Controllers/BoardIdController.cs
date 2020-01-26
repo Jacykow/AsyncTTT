@@ -51,6 +51,35 @@ namespace AsyncTTT_Backend.Controllers
         {
             var credentials = ControllerUtility.GetCredentials(Request.Headers);
 
+            var sqlCommand = new SimpleSqlCommand<User>()
+            {
+                SqlCommand = "EXECUTE addMove @mNick = @nick, @mX_coord = @xcoord, @mY_coord = @ycoord, @mId_game = @idgame",
+                Parameters = new SqlParameter[]
+                {
+                    new SqlParameter("@idgame", SqlDbType.Int)
+                    {
+                        Value = value.IdGame
+                    },
+                    new SqlParameter("@xcoord", SqlDbType.Int)
+                    {
+                        Value = value.XCoord
+                    },
+                    new SqlParameter("@ycoord", SqlDbType.Int)
+                    {
+                        Value = value.YCoord
+                    },
+                    new SqlParameter("@nick", SqlDbType.VarChar)
+                    {
+                        Value = credentials.login
+                    }
+                }
+            };
+
+
+            sqlCommand.Execute();
+
+            //sprawdzanie zwyciezcy
+
             var tab = new int[20, 20];
 
             for (int i = 0; i < 20; i++)
@@ -84,35 +113,8 @@ namespace AsyncTTT_Backend.Controllers
 
             movesList = sqlCommand1.Execute();
 
-            if (movesList.Count == 0)
-            {
-                var sqlCommand = new SimpleSqlCommand<User>()
-                {
-                    SqlCommand = "EXECUTE addMove @mNick = @nick, @mX_coord = @xcoord, @mY_coord = @ycoord, @mId_game = @idgame",
-                    Parameters = new SqlParameter[]
-                {
-                    new SqlParameter("@idgame", SqlDbType.Int)
-                    {
-                        Value = value.IdGame
-                    },
-                    new SqlParameter("@xcoord", SqlDbType.Int)
-                    {
-                        Value = value.XCoord
-                    },
-                    new SqlParameter("@ycoord", SqlDbType.Int)
-                    {
-                        Value = value.YCoord
-                    },
-                    new SqlParameter("@nick", SqlDbType.VarChar)
-                    {
-                        Value = credentials.login
-                    }
-                }
-                };
 
-                sqlCommand.Execute();
-            }
-            else
+            if(movesList.Count != 0)
             {
                 //IF MOVESLIST SIZE == 40 REMIS
                 if (movesList.Count == 40)
@@ -146,35 +148,7 @@ namespace AsyncTTT_Backend.Controllers
 
                     //IF ID_PLAYER2 == 0 OD RAZU DODAJ MOVE
 
-                    if (id_player2 == 0)
-                    {
-                        var sqlCommand = new SimpleSqlCommand<User>()
-                        {
-                            SqlCommand = "EXECUTE addMove @mNick = @nick, @mX_coord = @xcoord, @mY_coord = @ycoord, @mId_game = @idgame",
-                            Parameters = new SqlParameter[]
-                        {
-                    new SqlParameter("@idgame", SqlDbType.Int)
-                    {
-                        Value = value.IdGame
-                    },
-                    new SqlParameter("@xcoord", SqlDbType.Int)
-                    {
-                        Value = value.XCoord
-                    },
-                    new SqlParameter("@ycoord", SqlDbType.Int)
-                    {
-                        Value = value.YCoord
-                    },
-                    new SqlParameter("@nick", SqlDbType.VarChar)
-                    {
-                        Value = credentials.login
-                    }
-                        }
-                        };
-
-                        sqlCommand.Execute();
-                    }
-                    else
+                    if (id_player2 != 0)
                     {
                         for (int i = 0; i < 20; i++)
                         {
@@ -222,37 +196,8 @@ namespace AsyncTTT_Backend.Controllers
                                 }
                             }
                         }
-                        //IF WINNER == DODAJ MOVE
-                        if (winner == 0)
-                        {
-                            var sqlCommandM = new SimpleSqlCommand<User>()
-                            {
-                                SqlCommand = "EXECUTE addMove @mNick = @nick, @mX_coord = @xcoord, @mY_coord = @ycoord, @mId_game = @idgame",
-                                Parameters = new SqlParameter[]
-                                {
-                                new SqlParameter("@idgame", SqlDbType.Int)
-                                {
-                                    Value = value.IdGame
-                                },
-                                new SqlParameter("@xcoord", SqlDbType.Int)
-                                {
-                                    Value = value.XCoord
-                                },
-                                new SqlParameter("@ycoord", SqlDbType.Int)
-                                {
-                                    Value = value.YCoord
-                                },
-                                new SqlParameter("@nick", SqlDbType.VarChar)
-                                {
-                                    Value = credentials.login
-                                }
-                                }
-                            };
-
-                            sqlCommandM.Execute();
-                        }
-                        //ELSE GRA WYGRANA, GRA DO HISTORII Z WYNIKIEM
-                        else
+                        //IF WINNER != 0 to gra do historii z wynikiem
+                        if (winner != 0)
                         {
                             var sqlCommandW = new SimpleSqlCommand<User>()
                             {
