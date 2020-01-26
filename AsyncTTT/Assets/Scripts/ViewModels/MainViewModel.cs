@@ -41,38 +41,38 @@ namespace Assets.Scripts.ViewModels
             _login.OnClickAsObservable()
                 .Where(_ => ValidateCredentials())
                 .SelectMany(_ =>
-            {
-                AuthorizationManager.Main.Login = _loginInput.text;
-                AuthorizationManager.Main.Password = _passwordInput.text;
-                return new CheckLogin().Execute();
-            }).Subscribe(_ =>
-            {
-                _friends.gameObject.SetActive(true);
-                _games.gameObject.SetActive(true);
-            }, error =>
-            {
-                _friends.gameObject.SetActive(false);
-                _games.gameObject.SetActive(false);
-                PopupManager.Main.ShowPopup(error.Message);
-            }).AddTo(this);
+                {
+                    _friends.gameObject.SetActive(false);
+                    _games.gameObject.SetActive(false);
+                    AuthorizationManager.Main.Login = _loginInput.text;
+                    AuthorizationManager.Main.Password = _passwordInput.text;
+                    return new CheckLogin().Execute();
+                }).Subscribe(_ =>
+                {
+                    _friends.gameObject.SetActive(true);
+                    _games.gameObject.SetActive(true);
+                }, error =>
+                {
+                    PopupManager.Main.ShowPopup(error.Message);
+                }).AddTo(this);
 
             _register.OnClickAsObservable()
                 .Where(_ => ValidateCredentials())
                 .SelectMany(_ =>
-            {
-                AuthorizationManager.Main.Login = _loginInput.text;
-                AuthorizationManager.Main.Password = _passwordInput.text;
-                return new Register().Execute();
-            }).Subscribe(_ =>
-            {
-                _friends.gameObject.SetActive(true);
-                _games.gameObject.SetActive(true);
-            }, error =>
-            {
-                _friends.gameObject.SetActive(false);
-                _games.gameObject.SetActive(false);
-                PopupManager.Main.ShowPopup(error.Message);
-            }).AddTo(this);
+                {
+                    _friends.gameObject.SetActive(false);
+                    _games.gameObject.SetActive(false);
+                    AuthorizationManager.Main.Login = _loginInput.text;
+                    AuthorizationManager.Main.Password = _passwordInput.text;
+                    return new Register().Execute();
+                }).Subscribe(_ =>
+                {
+                    _friends.gameObject.SetActive(true);
+                    _games.gameObject.SetActive(true);
+                }, error =>
+                {
+                    PopupManager.Main.ShowPopup(error.Message);
+                }).AddTo(this);
         }
 
         private bool ValidateCredentials()
