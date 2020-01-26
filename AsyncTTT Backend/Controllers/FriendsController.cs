@@ -14,8 +14,9 @@ namespace AsyncTTT_Backend.Controllers
     public class FriendsController : ControllerBase
     {
 
+        //podajesz w headerze credentiale i dostajesz swoich znajomych
         [HttpGet(Name = "GetFriends")]
-        public IEnumerable<User> GetFirends(int id)
+        public IEnumerable<User> GetFriends()
         {
             var credentials = ControllerUtility.GetCredentials(Request.Headers);
 

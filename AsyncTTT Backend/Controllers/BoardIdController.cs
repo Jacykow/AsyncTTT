@@ -12,19 +12,10 @@ namespace AsyncTTT_Backend.Controllers
     [ApiController]
     public class BoardIdController: ControllerBase
     {
-        [HttpGet]
-        public DefaultResponse Get()
-        {
-            var credentials = ControllerUtility.GetCredentials(Request.Headers);
-            return new DefaultResponse
-            {
-                Success = true,
-                Message = $"<{credentials.login}> <{credentials.password}>"
-            };
-        }
 
+        //podajesz id gry i dostajesz wszystkie ruchy na planszy
         [HttpGet("{id}", Name = "GetMoves")]
-        public IEnumerable<Move> Get(int id)
+        public IEnumerable<Move> GetMoes(int id)
         {
             var sqlCommand = new SimpleSqlCommand<Move>()
             {
@@ -48,7 +39,13 @@ namespace AsyncTTT_Backend.Controllers
             return sqlCommand.Execute();
         }
 
-
+        //tutaj dojdajesz ruch
+        //jezeli przed tym ruchem gra sie zakonczyla remisem, wygrana przegrana to wtedy gra zostaje usunieta i przeniesiona do historii
+        //score to id wygranego gracza, 0 oznacza remis
+        //mozesz sprawdzic dokladnie tego posta, bo nie mialem zbioru do testow, przesledz algorytm, zwlaszcza szukania po skosie planszy
+        //jesli gra sie nie konczy to wtedy ruch aktumatycznie sie dodaje
+        //podajesz x, y, id gracza i gry
+        //jesli wolisz zeby sprawdzalo czy gra jest wygrana po tym ruchu to jesli ci wygodniej to mozesz to latwo przerobic
         [HttpPost]
         public void Post([FromBody] Move value)
         {
