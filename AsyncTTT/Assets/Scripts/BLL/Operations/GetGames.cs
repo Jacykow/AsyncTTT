@@ -36,12 +36,24 @@ namespace Assets.Scripts.BLL.Operations
             var gamesOngoingOperation = new AzureApiQuery<List<ApiGame>>(ApiConfig.Endpoints.AzureBoard, HttpMethod.Get)
                 .Execute().Select(ongoingGames =>
                 {
-                    games.AddRange(ongoingGames.Select(ongoingGame => new Game
+                    int playerId = AuthorizationManager.Main.Id;
+                    games.AddRange(ongoingGames.Select(ongoingGame =>
                     {
-                        Board = null,
-                        Id = ongoingGame.id_game,
-                        Name = ongoingGame.name,
-                        State = GameState.YourTurn
+                        return new Game
+                        {
+                            Board = null,
+                            Id = ongoingGame.id_game,
+                            Name = ongoingGame.name + " - Tura " + ongoingGame.count_turns,
+                            State =
+                                (ongoingGame.id_player1 == playerId && ongoingGame.who_move == 1)
+                                || (ongoingGame.id_player2 == playerId && ongoingGame.who_move == 2)
+                                || ongoingGame.who_move == 0
+                                ? GameState.YourTurn : GameState.TheirTurn,
+                            TurnOddity =
+                                (ongoingGame.count_turns
+                                + (ongoingGame.id_player1 == playerId ? 1 : 0)) % 2,
+                            TurnCount = ongoingGame.count_turns
+                        };
                     }));
                     return Unit.Default;
                 });

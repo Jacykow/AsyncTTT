@@ -8,8 +8,10 @@ namespace Assets.Scripts.BLL.Models
         public string Name { get; set; }
         public GameState State { get; set; }
         public int[,] Board { get; set; }
-        public int TurnOddity { get; set; } = 1;
+        public int TurnOddity { get; set; }
         public int OpponentId { get; set; }
+        public bool CanMove => State == GameState.YourTurn;
+        public int TurnCount { get; set; }
 
         public int Order =>
             State == GameState.Invited ? 3 :

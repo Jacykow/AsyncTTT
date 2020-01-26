@@ -37,6 +37,7 @@ namespace Assets.Scripts.ViewModels
                                     });
                                 break;
                             case GameState.YourTurn:
+                            case GameState.TheirTurn:
                                 ViewManager.Main.ViewParameters["selected_game"] = game;
                                 ViewManager.Main.ChangeView("Board");
                                 break;

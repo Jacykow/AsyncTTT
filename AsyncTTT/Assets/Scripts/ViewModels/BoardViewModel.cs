@@ -74,7 +74,9 @@ namespace Assets.Scripts.ViewModels
                                 : _game.Board[x, y] == 1 ? (Color.gray + Color.black) / 2
                                 : Color.clear;
                             _fields[y, x].GetComponent<Button>().interactable =
-                                _game.Board[x, y] == -1 && (x + y) % 2 == _game.TurnOddity;
+                                _game.CanMove
+                                && _game.Board[x, y] == -1
+                                && (x + y) % 2 == _game.TurnOddity;
                         }
                     }
                 }).AddTo(this);
