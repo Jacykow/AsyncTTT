@@ -8,7 +8,8 @@ namespace Gulib.Networking
 {
     public static class UnityWebRequestExtensions
     {
-        public static IObservable<TModel> SelectModel<TModel>(this IObservable<UnityWebRequest> observableRequest, JsonSerializerSettings jsonSettings = null)
+        public static IObservable<TModel> SelectModel<TModel>
+            (this IObservable<UnityWebRequest> observableRequest, JsonSerializerSettings jsonSettings = null)
         {
             jsonSettings = jsonSettings ?? new JsonSerializerSettings();
             return observableRequest.Select(request =>
@@ -21,6 +22,14 @@ namespace Gulib.Networking
         {
             string encodedCredentials = Convert.ToBase64String(Encoding.ASCII.GetBytes(login + ":" + password));
             return requestBuilder.AddHeader("Authorization", "Basic " + encodedCredentials);
+        }
+
+        public static UnityWebRequestBuilder SetJsonBody(this UnityWebRequestBuilder requestBuilder, object model, JsonSerializerSettings jsonSettings = null)
+        {
+            jsonSettings = jsonSettings ?? new JsonSerializerSettings();
+            requestBuilder.Body = JsonConvert.SerializeObject(model, jsonSettings);
+            requestBuilder.AddHeader("Content-Type", "application/json");
+            return requestBuilder;
         }
     }
 }

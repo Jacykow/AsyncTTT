@@ -1,9 +1,14 @@
-﻿using Assets.Scripts.BLL.Enums;
+﻿using Assets.Scripts.Api.Config;
+using Assets.Scripts.Api.Operations;
+using Assets.Scripts.BLL.Enums;
 using Assets.Scripts.BLL.Models;
 using Gulib.UniRx;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
 using UniRx;
+using ApiGame = Assets.Scripts.Api.Models.Game;
 
 namespace Assets.Scripts.BLL.Operations
 {
@@ -11,39 +16,20 @@ namespace Assets.Scripts.BLL.Operations
     {
         public IObservable<List<Game>> Execute()
         {
-            return Observable.Return(new List<Game>
-            {
-                new Game
+            var games = new List<Game>();
+            var gamesHistoryOperation = new AzureApiQuery<List<ApiGame>>(ApiConfig.Endpoints.AzureGameHistory, HttpMethod.Get)
+                .Execute().Select(historyGames =>
                 {
-                    Id = 0,
-                    Name = "A vs B",
-                    State = GameState.Victory
-                },
-                new Game
-                {
-                    Id = 1,
-                    Name = "A vs C",
-                    State = GameState.Loss
-                },
-                new Game
-                {
-                    Id = 2,
-                    Name = "A vs D",
-                    State = GameState.Invited
-                },
-                new Game
-                {
-                    Id = 3,
-                    Name = "A vs E",
-                    State = GameState.YourTurn
-                },
-                new Game
-                {
-                    Id = 4,
-                    Name = "A vs F",
-                    State = GameState.TheirTurn
-                }
-            });
+                    games.AddRange(historyGames.Select(apiGame => new Game
+                    {
+                        Board = null,
+                        Id = apiGame.id_game,
+                        State = GameState.Victory
+                    }));
+                    return Unit.Default;
+                });
+            return Observable.WhenAll(gamesHistoryOperation)
+                .Select(_ => games);
         }
     }
 }
