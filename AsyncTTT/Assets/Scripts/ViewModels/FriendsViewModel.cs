@@ -77,11 +77,11 @@ namespace Assets.Scripts.ViewModels
             switch (friend.State)
             {
                 case FriendState.Accepted:
-                    configuration["subtitle_text"] = "Invite to a game";
+                    configuration["subtitle_text"] = "Zaproś do gry";
                     configuration["subtitle_color"] = Color.green;
                     break;
                 case FriendState.Invitation:
-                    configuration["subtitle_text"] = "Accept invitation";
+                    configuration["subtitle_text"] = "Zaakceptuj znajomość!";
                     configuration["subtitle_color"] = Color.yellow;
                     break;
                 default:
