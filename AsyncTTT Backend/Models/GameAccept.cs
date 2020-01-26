@@ -1,0 +1,9 @@
+﻿namespace AsyncTTT_Backend.Models
+{
+    public class GameAccept
+    {
+        public int IdPlayer1 { get; set; }
+        public int IdPlayer2 { get; set; }
+        
+    }
+}

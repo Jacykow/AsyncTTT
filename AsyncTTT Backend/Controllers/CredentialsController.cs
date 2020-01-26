@@ -15,7 +15,8 @@ namespace AsyncTTT_Backend.Controllers
     {
      
 
-        // To jest testowe i do wywalenia
+        //podajesz w headerze login i haslo i dosajesz default response
+        //false jesli gracz o podanych credentialach nie istnieje, true jesli istnieje
         [HttpGet(Name = "GetCred")]
         public bool GetCred()
         {
@@ -55,9 +56,9 @@ namespace AsyncTTT_Backend.Controllers
         }
 
 
-        //tutaj blad jesli nick taki istnieje
+        //tworzy gracza o podanych w headerze credentialach
         [HttpPost]
-        public void Post([FromBody] Credentials value)
+        public void Post()
         {
             var credentials = ControllerUtility.GetCredentials(Request.Headers);
 

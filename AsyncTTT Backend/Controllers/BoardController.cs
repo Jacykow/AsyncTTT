@@ -13,28 +13,22 @@ namespace AsyncTTT_Backend.Controllers
     [ApiController]
     public class BoardController : ControllerBase
     {
-        [HttpGet]
-        public DefaultResponse Get()
+        //podajesz nick w headerze, dostajesz liste gier, w ktorych bierzesz udzial
+        //dostajesz w modelu id aktualnej tury (ona moze byc rowna 0 i wtedy oznacza to, ze jest 0 ruchow w grze albo obydwaj gracze wykonali ruchy)
+        //za pomoca tego mozesz okreslic czyja jest tura: jesi rowna 0 to gracza ktory zaczynal czyli player1, jak inne to player2
+        [HttpGet(Name = "GetGame")]
+        public IEnumerable<Game> Get()
         {
             var credentials = ControllerUtility.GetCredentials(Request.Headers);
-            return new DefaultResponse
-            {
-                Success = true,
-                Message = $"<{credentials.login}> <{credentials.password}>"
-            };
-        }
 
-        [HttpGet("{id}", Name = "GetGame")]
-        public IEnumerable<Game> Get(int id)
-        {
             var sqlCommand = new SimpleSqlCommand<Game>()
             {
-                SqlCommand = "SELECT * from games WHERE player1 = @id or player2 = @id",
+                SqlCommand = "SELECT id_game, player1, player2, coalesce(id_turncur,0), CONCAT(CONVERT(varchar(10), player1),'vs',CONVERT(varchar(10), player2)) from games WHERE player1 = (SELECT p.id_player FROM credentials c join players p on (c.id_cred = p.id_cred) WHERE c.nickname = @nick) or player2 = (SELECT p.id_player FROM credentials c join players p on (c.id_cred = p.id_cred) WHERE c.nickname = @nick)",
                 Parameters = new SqlParameter[]
                 {
-                    new SqlParameter("@id", SqlDbType.Int)
+                    new SqlParameter("@nick", SqlDbType.VarChar)
                     {
-                        Value = id
+                        Value = credentials.login
                     }
                 },
                 ModelExtractor = reader => new Game
@@ -42,13 +36,15 @@ namespace AsyncTTT_Backend.Controllers
                     id_game = (int)reader[0],
                     id_player1 = (int)reader[1],
                     id_player2 = (int)reader[2],
-                    id_current_turn = (int)reader[3]
+                    id_current_turn = (int)reader[3],
+                    name = (string)reader[4]
                 }
             };
 
             return sqlCommand.Execute();
         }
 
+        //podajesz nick w headerze, a body (w api na trello opisane)
         [HttpPost]
         public void Post([FromBody] Invitation value)
         {

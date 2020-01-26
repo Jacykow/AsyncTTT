@@ -14,16 +14,16 @@ namespace AsyncTTT_Backend.Controllers
     public class FriendsInvitationController : ControllerBase
     {
 
-
+        //podajesz w headerze nick i dostajesz zaproszenia do siebie albo od siebie
         [HttpGet(Name = "GetInvit")]
-        public IEnumerable<FriendsInvitation> GetInvit(int id)
+        public IEnumerable<User> GetInvit()
         {
 
             var credentials = ControllerUtility.GetCredentials(Request.Headers);
 
-            var sqlCommand = new SimpleSqlCommand<FriendsInvitation>()
+            var sqlCommand = new SimpleSqlCommand<User>()
             {
-                SqlCommand = "SELECT * from friends_invitations WHERE sender = (SELECT id_player FROM credentials c join players p on(c.id_cred =  p.id_cred) WHERE nickname = @nick) OR reciever = (SELECT id_player FROM credentials c join players p on(c.id_cred =  p.id_cred) WHERE nickname = @nick)",
+                SqlCommand = "SELECT sender, c.id_cred, nickname from friends_invitations join players p on (sender =  id_player) join credentials c on (c.id_cred = p.id_cred) WHERE reciever = (SELECT id_player FROM credentials c join players p on(c.id_cred =  p.id_cred) WHERE nickname = @nick)",
                 Parameters = new SqlParameter[]
                 {
                     new SqlParameter("@nick", SqlDbType.VarChar)
@@ -31,12 +31,12 @@ namespace AsyncTTT_Backend.Controllers
                         Value = credentials.login
                     }
                 },
-                ModelExtractor = reader => new FriendsInvitation
+                ModelExtractor = reader => new User
                 {
                     Id = (int)reader[0],
-                    Sender = (int)reader[1],
-                    Reciever = (int)reader[2]
-               }
+                    Id_cred = (int)reader[1],
+                    nickname = (string)reader[2]
+                }
             };
 
             return sqlCommand.Execute();
@@ -45,7 +45,7 @@ namespace AsyncTTT_Backend.Controllers
 
 
 
-        //zmiana na nick
+        //podajesz w headerze nick, body opisane w api na trello
         [HttpPost]
         public void Post([FromBody] Invitation value)
         {
@@ -78,7 +78,7 @@ namespace AsyncTTT_Backend.Controllers
 
             var sqlCommand = new SimpleSqlCommand<Credentials>()
             {
-                SqlCommand = "EXECUTE addFriendship @vNick = @nick, @vPlayer2 = @rec",
+                SqlCommand = "EXECUTE addFriendship @vPlayer1 = @nick, @vPlayer2 = @rec",
                 Parameters = new SqlParameter[]
                 {
                     new SqlParameter("@nick", SqlDbType.VarChar)

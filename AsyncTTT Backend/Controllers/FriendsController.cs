@@ -14,14 +14,15 @@ namespace AsyncTTT_Backend.Controllers
     public class FriendsController : ControllerBase
     {
 
+        //podajesz w headerze credentiale i dostajesz swoich znajomych
         [HttpGet(Name = "GetFriends")]
-        public IEnumerable<User> GetFirends(int id)
+        public IEnumerable<User> GetFriends()
         {
             var credentials = ControllerUtility.GetCredentials(Request.Headers);
 
             var sqlCommand = new SimpleSqlCommand<User>()
             {
-                SqlCommand = "SELECT id_cred, id_player FROM friendships JOIN players on(player2 = id_player) WHERE player1 = ((SELECT id_player FROM credentials c join players p on(c.id_cred =  p.id_cred) WHERE nickname = @nick))",
+                SqlCommand = "SELECT c.id_cred, id_player, nickname FROM friendships JOIN players p on(player2 = id_player) join credentials c on (c.id_cred = p.id_cred) WHERE player1 = (SELECT id_player FROM credentials c join players p on(c.id_cred =  p.id_cred) WHERE nickname = @nick)",
                 Parameters = new SqlParameter[]
                 {
                     new SqlParameter("@nick", SqlDbType.VarChar)
@@ -33,7 +34,8 @@ namespace AsyncTTT_Backend.Controllers
                 {
                     //user jest na odwrót w bazie i nie mogę tego zmienić bez rozwalania bazy dlatego tu jest 1 i 0, a nie 0 i 1
                     Id = (int)reader[1],
-                    Id_cred = (int)reader[0]
+                    Id_cred = (int)reader[0],
+                    nickname = (string)reader[2]
                 }
             };
 
