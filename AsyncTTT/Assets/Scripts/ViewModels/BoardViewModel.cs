@@ -74,14 +74,16 @@ namespace Assets.Scripts.ViewModels
                                 : _game.Board[x, y] == 1 ? (Color.gray + Color.black) / 2
                                 : Color.clear;
                             _fields[y, x].GetComponent<Button>().interactable =
-                                _game.Board[x, y] == -1 && (x + y) % 2 == _game.TurnOddity;
+                                _game.CanMove
+                                && _game.Board[x, y] == -1
+                                && (x + y) % 2 == _game.TurnOddity;
                         }
                     }
                 }).AddTo(this);
 
             _fieldClickSubject.SelectMany(clickCoords =>
             {
-                return new MakeMove(clickCoords).Execute();
+                return new MakeMove(_game, clickCoords).Execute();
             }).Subscribe(moveResponse =>
             {
                 for (int y = 0; y < _boardSize; y++)
@@ -94,6 +96,9 @@ namespace Assets.Scripts.ViewModels
                 _fields[moveResponse.y, moveResponse.x]
                     .transform.GetChild(0).GetComponent<Image>().color =
                     (Color.gray * 0.5f + Color.green * 1.5f) / 2;
+            }, exception =>
+            {
+                PopupManager.Main.ShowPopup(exception.Message);
             }).AddTo(this);
         }
     }
