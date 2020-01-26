@@ -81,7 +81,7 @@ namespace Assets.Scripts.ViewModels
 
             _fieldClickSubject.SelectMany(clickCoords =>
             {
-                return new MakeMove(clickCoords).Execute();
+                return new MakeMove(_game, clickCoords).Execute();
             }).Subscribe(moveResponse =>
             {
                 for (int y = 0; y < _boardSize; y++)
@@ -94,6 +94,9 @@ namespace Assets.Scripts.ViewModels
                 _fields[moveResponse.y, moveResponse.x]
                     .transform.GetChild(0).GetComponent<Image>().color =
                     (Color.gray * 0.5f + Color.green * 1.5f) / 2;
+            }, exception =>
+            {
+                PopupManager.Main.ShowPopup(exception.Message);
             }).AddTo(this);
         }
     }
