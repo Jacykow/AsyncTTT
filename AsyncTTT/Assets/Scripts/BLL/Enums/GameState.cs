@@ -5,6 +5,7 @@
         None = 0,
         Victory,
         Loss,
+        Draw,
         TheirTurn,
         YourTurn,
         Invited
