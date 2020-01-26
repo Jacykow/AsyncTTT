@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Assets.Scripts.Managers
 {
@@ -6,7 +7,10 @@ namespace Assets.Scripts.Managers
     {
         private void Start()
         {
-            ViewManager.Main.ChangeView("Main");
+            if (SceneManager.sceneCount < 2)
+            {
+                ViewManager.Main.ChangeView("Main");
+            }
         }
     }
 }

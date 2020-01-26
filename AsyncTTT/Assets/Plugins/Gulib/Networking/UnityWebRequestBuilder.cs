@@ -1,6 +1,7 @@
 ﻿using Gulib.UniRx;
 using System;
 using System.Net.Http;
+using System.Text;
 using UniRx;
 using UnityEngine.Networking;
 
@@ -12,6 +13,11 @@ namespace Gulib.Networking
         public string Url { get => Request.url; set => Request.url = value; }
         public HttpMethod HttpMethod { set => Request.method = value.ToString(); }
         public DownloadHandler DownloadHandler { get => Request.downloadHandler; set => Request.downloadHandler = value; }
+        public string Body
+        {
+            get => Encoding.UTF8.GetString(Request.uploadHandler?.data);
+            set => Request.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(value));
+        }
 
         public UnityWebRequestBuilder(UnityWebRequest unityWebRequest = null)
         {

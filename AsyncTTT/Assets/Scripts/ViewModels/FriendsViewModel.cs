@@ -2,10 +2,13 @@
 using Assets.Scripts.BLL.Enums;
 using Assets.Scripts.BLL.Models;
 using Assets.Scripts.BLL.Operations;
+using Assets.Scripts.Managers;
 using Assets.Scripts.UI;
 using Assets.Scripts.Utility;
+using TMPro;
 using UniRx;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Assets.Scripts.ViewModels
 {
@@ -13,6 +16,10 @@ namespace Assets.Scripts.ViewModels
     {
         [SerializeField]
         private ListController _friendList;
+        [SerializeField]
+        private Button _requestFriendButton;
+        [SerializeField]
+        private TMP_InputField _friendNameInput;
 
         private void Start()
         {
@@ -21,9 +28,44 @@ namespace Assets.Scripts.ViewModels
                 friends.Sort((a, b) => -(a.Order - b.Order));
                 foreach (var friend in friends)
                 {
-                    _friendList.AddItem(GetConfiguration(friend));
+                    _friendList.AddItem(GetConfiguration(friend))
+                        .Subscribe(_ =>
+                        {
+                            switch (friend.State)
+                            {
+                                case FriendState.Accepted:
+                                    new CreateGame(friend).Execute()
+                                        .Subscribe(__ =>
+                                        {
+                                            ViewManager.Main.Back();
+                                        }, exception =>
+                                        {
+                                            ViewManager.Main.Back();
+                                            PopupManager.Main.ShowPopup(exception.Message);
+                                        });
+                                    break;
+                                case FriendState.Invitation:
+                                    new AcceptFriendInvitation(friend).Execute()
+                                        .Subscribe(__ =>
+                                        {
+                                            ViewManager.Main.Back();
+                                        }, exception =>
+                                        {
+                                            ViewManager.Main.Back();
+                                            PopupManager.Main.ShowPopup(exception.Message);
+                                        });
+                                    break;
+                            }
+                        }).AddTo(this);
                 }
             }).AddTo(this);
+
+            _requestFriendButton.OnClickAsObservable().SelectMany(_ =>
+            {
+                return new InviteFriend(_friendNameInput.text).Execute();
+            }).Subscribe(_ => { },
+                    exception => PopupManager.Main.ShowPopup(exception.Message))
+                .AddTo(this);
         }
 
         private ConfigurationDictionary GetConfiguration(Friend friend)
