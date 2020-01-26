@@ -39,9 +39,9 @@ namespace Assets.Scripts.Managers
         {
             if (_viewSceneNames.Count >= 2)
             {
-                string lastSceneName = _viewSceneNames[_viewSceneNames.Count - 2];
-                _viewSceneNames.RemoveRange(_viewSceneNames.Count - 2, 2);
-                ChangeView(lastSceneName);
+                SceneManager.UnloadSceneAsync(_viewSceneNames[_viewSceneNames.Count - 1]);
+                SceneManager.LoadScene(_viewSceneNames[_viewSceneNames.Count - 2], LoadSceneMode.Additive);
+                _viewSceneNames.RemoveRange(_viewSceneNames.Count - 1, 1);
             }
             else
             {

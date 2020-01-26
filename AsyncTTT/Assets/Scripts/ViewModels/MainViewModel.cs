@@ -17,8 +17,16 @@ namespace Assets.Scripts.ViewModels
 
         private void Start()
         {
-            _friends.gameObject.SetActive(false);
-            _games.gameObject.SetActive(false);
+            if (string.IsNullOrEmpty(AuthorizationManager.Main.Login) == false)
+            {
+                _loginInput.text = AuthorizationManager.Main.Login;
+                _passwordInput.text = AuthorizationManager.Main.Password;
+            }
+            else
+            {
+                _friends.gameObject.SetActive(false);
+                _games.gameObject.SetActive(false);
+            }
 
             _friends.OnClickAsObservable().Subscribe(_ =>
             {
@@ -30,9 +38,10 @@ namespace Assets.Scripts.ViewModels
                 ViewManager.Main.ChangeView("Games");
             }).AddTo(this);
 
-            _login.OnClickAsObservable().SelectMany(_ =>
+            _login.OnClickAsObservable()
+                .Where(_ => ValidateCredentials())
+                .SelectMany(_ =>
             {
-                ValidateCredentials();
                 AuthorizationManager.Main.Login = _loginInput.text;
                 AuthorizationManager.Main.Password = _passwordInput.text;
                 return new CheckLogin().Execute();
@@ -42,12 +51,15 @@ namespace Assets.Scripts.ViewModels
                 _games.gameObject.SetActive(true);
             }, error =>
             {
+                _friends.gameObject.SetActive(false);
+                _games.gameObject.SetActive(false);
                 PopupManager.Main.ShowPopup(error.Message);
             }).AddTo(this);
 
-            _register.OnClickAsObservable().SelectMany(_ =>
+            _register.OnClickAsObservable()
+                .Where(_ => ValidateCredentials())
+                .SelectMany(_ =>
             {
-                ValidateCredentials();
                 AuthorizationManager.Main.Login = _loginInput.text;
                 AuthorizationManager.Main.Password = _passwordInput.text;
                 return new Register().Execute();
@@ -57,6 +69,8 @@ namespace Assets.Scripts.ViewModels
                 _games.gameObject.SetActive(true);
             }, error =>
             {
+                _friends.gameObject.SetActive(false);
+                _games.gameObject.SetActive(false);
                 PopupManager.Main.ShowPopup(error.Message);
             }).AddTo(this);
         }
