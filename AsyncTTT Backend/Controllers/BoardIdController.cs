@@ -19,7 +19,7 @@ namespace AsyncTTT_Backend.Controllers
         {
             var sqlCommand = new SimpleSqlCommand<Move>()
             {
-                SqlCommand = "EXECUTE returnMoves @vIdGame = @Id",
+                SqlCommand = "EXECUTE returnMoves @vIdGame = @id",
                 Parameters = new SqlParameter[]
                 {
                     new SqlParameter("@id", SqlDbType.Int)
@@ -79,7 +79,7 @@ namespace AsyncTTT_Backend.Controllers
 
             var sqlCommand1 = new SimpleSqlCommand<Move>()
             {
-                SqlCommand = "EXECUTE returnMoves @vIdGame = @Id",
+                SqlCommand = "EXECUTE returnMoves @vIdGame = @id",
                 Parameters = new SqlParameter[]
                 {
                     new SqlParameter("@id", SqlDbType.Int)
