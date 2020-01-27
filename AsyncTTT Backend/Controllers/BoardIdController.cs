@@ -171,7 +171,7 @@ namespace AsyncTTT_Backend.Controllers
 
         private bool CheckVictory(int[,] board, int x, int y, int dx, int dy)
         {
-            for (int d = 1; d <= 3; d++)
+            for (int d = 1; d <= 2; d++)
             {
                 if (board[x + dx * d, y + dy * d] != board[x, y])
                 {
